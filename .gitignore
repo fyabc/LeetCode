@@ -32,7 +32,8 @@
 *.app
 
 # CLion Project Files
-/.idea
+.idea/
 
 # CMake Build Files
-/cmake-build-*
+cmake-build-*/
+cmake-build-*/
