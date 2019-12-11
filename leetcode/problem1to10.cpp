@@ -1,3 +1,5 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "readability-convert-member-functions-to-static"
 //
 // Created by v-yaf on 12/10/2019.
 //
@@ -15,6 +17,7 @@ public:
     vector<int> twoSum(vector<int>& nums, int target) {
         vector<pair<int, int>> num_idx;
 
+        num_idx.reserve(nums.size());
         for (int i = 0; i < nums.size(); ++i) {
             num_idx.emplace_back(nums[i], i);
         }
@@ -32,6 +35,9 @@ public:
                 }
             }
         }
+
+        // Unreachable code
+        return {};
     }
 
     /// Problem 2
@@ -49,7 +55,7 @@ public:
          */
         template <typename ContainerType>
         static ListNode* from_container_reversed(const ContainerType& container) {
-            ListNode* result = NULL;
+            ListNode* result = nullptr;
             for (auto&& item : container) {
                 auto new_node = new ListNode(item);
                 new_node->next = result;
@@ -64,12 +70,12 @@ public:
     };
 
     ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
-        ListNode* result = NULL;
-        ListNode* last = NULL;
+        ListNode* result = nullptr;
+        ListNode* last = nullptr;
 
         int carry_digit = 0;
 
-        while (l1 != NULL && l2 != NULL) {
+        while (l1 != nullptr && l2 != nullptr) {
             int digit_sum = l1->val + l2->val + carry_digit;
             carry_digit = digit_sum / 10;
 
@@ -79,8 +85,8 @@ public:
             l2 = l2->next;
         }
 
-        auto remain = l1 == NULL ? l2 : l1;
-        while (remain != NULL) {
+        auto remain = l1 == nullptr ? l2 : l1;
+        while (remain != nullptr) {
             int digit_sum = remain->val + carry_digit;
             carry_digit = digit_sum / 10;
 
@@ -98,7 +104,7 @@ public:
 
 private:
     void insert_at_head(ListNode*& list, ListNode*& last, ListNode* node) {
-        if (list == NULL) {
+        if (list == nullptr) {
             list = last = node;
             return;
         }
@@ -147,5 +153,8 @@ public:
 public:
     double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
         int lo = numeric_limits<int>::min(), hi = numeric_limits<int>::max();
+        return 0.0;
     }
 };
+
+#pragma clang diagnostic pop
