@@ -37,9 +37,76 @@ TEST(Problem3Test, Basic) {
 TEST(Problem4Test, Basic) {
     Solution s;
 
-    vector<int> v1 {1, 3}, v2 {2};
-    EXPECT_EQ(s.findMedianSortedArrays(v1, v2), 2.0);
+    vector<int> p1 {1, 3, 4, 8, 9}, q1 {2, 5, 6, 7, 10, 11};
+    EXPECT_EQ(s.findMedianSortedArrays(p1, q1), 6.0);
 
-    vector<int> v3 {1, 2}, v4 {3, 4};
-    EXPECT_EQ(s.findMedianSortedArrays(v3, v4), 2.5);
+    vector<int> p2 {1, 2, 3}, q2 {4, 5, 6, 7, 8, 9, 10, 11};
+    EXPECT_EQ(s.findMedianSortedArrays(p2, q2), 6.0);
+
+    vector<int> p3 {9, 10, 11}, q3 {1, 2, 3, 4, 5, 6, 7, 8};
+    EXPECT_EQ(s.findMedianSortedArrays(p3, q3), 6.0);
+
+    vector<int> p4 {1, 3}, q4 {2};
+    EXPECT_EQ(s.findMedianSortedArrays(p4, q4), 2.0);
+
+    vector<int> p5 {1, 2}, q5 {3, 4};
+    EXPECT_EQ(s.findMedianSortedArrays(p5, q5), 2.5);
+
+    vector<int> p6 {0, 0}, q6 {0, 0};
+    EXPECT_EQ(s.findMedianSortedArrays(p6, q6), 0.0);
+
+    vector<int> p7 {}, q7 {1, 4, 7, 10};
+    EXPECT_EQ(s.findMedianSortedArrays(p7, q7), 5.5);
+}
+
+TEST(Problem5Test, Basic) {
+    Solution s;
+
+    EXPECT_EQ(s.longestPalindrome("babad"), "bab");
+    EXPECT_EQ(s.longestPalindrome("cbbd"), "bb");
+}
+
+TEST(Problem6Test, Basic) {
+    Solution s;
+
+    EXPECT_EQ(s.convert("PAYPALISHIRING", 3), "PAHNAPLSIIGYIR");
+    EXPECT_EQ(s.convert("PAYPALISHIRING", 4), "PINALSIGYAHRPI");
+}
+
+TEST(Problem7Test, Basic) {
+    Solution s;
+
+    EXPECT_EQ(s.reverse(123), 321);
+    EXPECT_EQ(s.reverse(-123), -321);
+    EXPECT_EQ(s.reverse(120), 21);
+    EXPECT_EQ(s.reverse(1534236469), 0);
+    EXPECT_EQ(s.reverse(-2147483648), 0);
+}
+
+TEST(Problem8Test, Basic) {
+    Solution s;
+
+    EXPECT_EQ(s.myAtoi("42"), 42);
+    EXPECT_EQ(s.myAtoi("   -42"), -42);
+    EXPECT_EQ(s.myAtoi("4193 with words"), 4193);
+    EXPECT_EQ(s.myAtoi("words and 987"), 0);
+    EXPECT_EQ(s.myAtoi("-91283472332"), -2147483648);
+}
+
+TEST(Problem9Test, Basic) {
+    Solution s;
+
+    EXPECT_EQ(s.isPalindrome(121), true);
+    EXPECT_EQ(s.isPalindrome(-121), false);
+    EXPECT_EQ(s.isPalindrome(10), false);
+}
+
+TEST(Problem10Test, Basic) {
+    Solution s;
+
+    EXPECT_EQ(s.isMatch("aa", "a"), false);
+    EXPECT_EQ(s.isMatch("aa", "a*"), true);
+    EXPECT_EQ(s.isMatch("ab", ".*"), true);
+    EXPECT_EQ(s.isMatch("aab", "c*a*b*"), true);
+    EXPECT_EQ(s.isMatch("mississippi", "mis*is*p*."), false);
 }

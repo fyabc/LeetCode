@@ -6,28 +6,32 @@
 #define LEETCODE_IO_H
 
 #include <iostream>
+#include <string>
 
 namespace leetcode {
 
-template <typename T>
-void print(const T& t,
-    std::ostream& ostream=std::cout) {
-    ostream << t << std::endl;
+inline void println() {
+    std::cout << std::endl;
 }
 
-template <typename It1, typename It2>
-void print(It1 begin, It2 end,
-    const std::string& sep=" ",
-    std::ostream& ostream=std::cout) {
-    auto it = begin;
-    while (it != end) {
-        ostream << *it;
-        ++it;
-        if (it != end) {
-            ostream << sep;
-        }
+template <typename Arg1>
+inline void println(Arg1&& arg1) {
+    std::cout << arg1 << std::endl;
+}
+
+template <typename Arg1, typename Arg2, typename... Args>
+inline void println(Arg1&& arg1, Arg2&& arg2, Args&&... args) {
+    std::cout << arg1 << ' ';
+    println(std::forward<Arg2>(arg2), std::forward<Args>(args)...);
+}
+
+template <typename ContainerT>
+inline void println_container(ContainerT&& container, const std::string& sep=", ") {
+    std::cout << '[';
+    for (auto&& item: container) {
+        std::cout << item << sep;
     }
-    ostream << std::endl;
+    std::cout << ']' << std::endl;
 }
 
 }
