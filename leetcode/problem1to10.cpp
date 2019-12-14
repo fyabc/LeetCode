@@ -395,7 +395,20 @@ public:
     /// Problem 10
 public:
     bool isMatch(const string& s, const string& p) {
+        int M = s.size(), N = p.size();
+        // dp[i, j] indicates if s[i:] and p[j:] match.
+        bool* dp = new bool[M * N];
+        fill(dp, dp + (M * N), false);
+
+        bool result = dp[pos(0, 0, N)];
+        delete[] dp;
+
         return false;
+    }
+
+private:
+    inline static int pos(int m, int n, int N) {
+        return m * N + n;
     }
 };
 

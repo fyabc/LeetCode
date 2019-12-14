@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <string>
+#include <utility>
 
 namespace leetcode {
 
@@ -32,6 +33,12 @@ inline void println_container(ContainerT&& container, const std::string& sep=", 
         std::cout << item << sep;
     }
     std::cout << ']' << std::endl;
+}
+
+template <typename T1, typename T2>
+inline std::ostream& operator<< (std::ostream& ostream, const std::pair<T1, T2>& pair) {
+    ostream << "pair(" << pair.first << ", " << pair.second << ")";
+    return ostream;
 }
 
 }
