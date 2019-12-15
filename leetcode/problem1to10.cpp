@@ -2,10 +2,6 @@
 // Created by v-yaf on 12/10/2019.
 //
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "MemberFunctionCanBeStatic"
-#pragma ide diagnostic ignored "readability-convert-member-functions-to-static"
-
 #include "support/IO.h"
 #include <vector>
 #include <algorithm>
@@ -14,10 +10,10 @@
 
 using namespace std;
 
-class Solution {
+class Solution1to10 {
     /// Problem 1
 public:
-    vector<int> twoSum(vector<int>& nums, int target) {
+    static vector<int> twoSum(vector<int>& nums, int target) {
         vector<pair<int, int>> numIdx;
 
         numIdx.reserve(nums.size());
@@ -72,7 +68,7 @@ public:
         }
     };
 
-    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+    static ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
         ListNode* result = nullptr;
         ListNode* last = nullptr;
 
@@ -106,7 +102,7 @@ public:
     }
 
 private:
-    void insertAtHead(ListNode*& list, ListNode*& last, ListNode* node) {
+    static void insertAtHead(ListNode*& list, ListNode*& last, ListNode* node) {
         if (list == nullptr) {
             list = last = node;
             return;
@@ -130,7 +126,7 @@ public:
      * @param s
      * @return
      */
-    int lengthOfLongestSubstring(const string& s) {
+    static int lengthOfLongestSubstring(const string& s) {
         unordered_map<char, int> charIndex;
 
         int n = static_cast<int>(s.length()), result = 0;
@@ -154,7 +150,13 @@ public:
 
     /// Problem 4
 public:
-    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+    /**
+     * See in https://leetcode.com/problems/median-of-two-sorted-arrays/solution/.
+     * @param nums1
+     * @param nums2
+     * @return
+     */
+    static double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
         if (nums1.empty())
             return getSingleMedian(nums2);
         if (nums2.empty())
@@ -179,7 +181,7 @@ public:
             }
 
             if (i == 0 || j == N) {
-                lo = hi = i;
+                hi = lo = i;
                 break;
             }
 
@@ -206,7 +208,7 @@ public:
     }
 
 private:
-    inline double getMedian(vector<int>::size_type i, vector<int>::size_type j, vector<int>& nums1, vector<int>& nums2, bool odd) {
+    static inline double getMedian(vector<int>::size_type i, vector<int>::size_type j, vector<int>& nums1, vector<int>& nums2, bool odd) {
         double max_lo;
         if (i == 0)
             max_lo = static_cast<double>(nums2[j - 1]);
@@ -230,7 +232,7 @@ private:
         }
     }
 
-    inline double getSingleMedian(vector<int>& nums) {
+    static inline double getSingleMedian(vector<int>& nums) {
         auto N = nums.size();
         if (N % 2 != 0)
             return static_cast<double>(nums[N / 2]);
@@ -244,14 +246,14 @@ public:
      * Assume that len(s) <= 1000.
      *
      * Algorithm: Manacher algorithm
-     *  See in <https://segmentfault.com/a/1190000003914228>.
+     *  See in https://segmentfault.com/a/1190000003914228.
      *
      * Time complexity: O(n)
      *
      * @param s
      * @return
      */
-    string longestPalindrome(const string& s) {
+    static string longestPalindrome(const string& s) {
         string extended(2 * s.length() + 1, '\1');
 
         // Array of palindrome radius.
@@ -308,7 +310,7 @@ public:
 
     /// Problem 6
 public:
-    string convert(const string& s, int numRows) {
+    static string convert(const string& s, int numRows) {
         if (numRows == 1)
             return s;
         auto n = s.size();
@@ -336,7 +338,7 @@ public:
 
     /// Problem 7
 public:
-    int reverse(int x) {
+    static int reverse(int x) {
         auto xLong = static_cast<long long>(x);
         bool neg = xLong < 0;
 
@@ -359,7 +361,7 @@ public:
 
     /// Problem 8
 public:
-    int myAtoi(const string& str) {
+    static int myAtoi(const string& str) {
         long long result = strtoll(str.c_str(), nullptr, 10);
         if (result > numeric_limits<int>::max())
             return numeric_limits<int>::max();
@@ -370,7 +372,7 @@ public:
 
     /// Problem 9
 public:
-    bool isPalindrome(int x) {
+    static bool isPalindrome(int x) {
         if (x < 0)
             return false;
         if (x == 0)
@@ -383,7 +385,7 @@ public:
             x /= 10;
         }
 
-        int i = 0, j = digits.size() - 1;
+        int i = 0, j = static_cast<int>(digits.size()) - 1;
         for (; i <= j; ++i, --j) {
             if (digits[i] != digits[j])
                 break;
@@ -394,22 +396,41 @@ public:
 
     /// Problem 10
 public:
-    bool isMatch(const string& s, const string& p) {
-        int M = s.size(), N = p.size();
+    /**
+     * Using dynamic programming (bottom-up version)
+     * See https://leetcode.com/problems/regular-expression-matching/solution/.
+     * @param s
+     * @param p
+     * @return
+     */
+    static bool isMatch(const string& s, const string& p) {
+        auto M = s.size(), N = p.size();
         // dp[i, j] indicates if s[i:] and p[j:] match.
-        bool* dp = new bool[M * N];
-        fill(dp, dp + (M * N), false);
+        bool* dp = new bool[(M + 1) * (N + 1)];
+        fill(dp, dp + ((M + 1) * (N + 1)), false);
+        dp[M * N + M + N] = true;
+
+        for (int i = static_cast<int>(M); i >= 0; --i) {
+            for (int j = static_cast<int>(N) - 1; j >= 0; --j) {
+                bool firstMatch = (i < M && (s[i] == p[j] || p[j] == '.'));
+                if (j < N - 1 && p[j + 1] == '*') {
+                    // Match Kleene star.
+                    dp[pos(i, j, N)] = dp[pos(i, j + 2, N)] || (firstMatch && dp[pos(i + 1, j, N)]);
+                }
+                else {
+                    dp[pos(i, j, N)] = firstMatch && dp[pos(i + 1, j + 1, N)];
+                }
+            }
+        }
 
         bool result = dp[pos(0, 0, N)];
         delete[] dp;
 
-        return false;
+        return result;
     }
 
 private:
-    inline static int pos(int m, int n, int N) {
-        return m * N + n;
+    inline static string::size_type pos(int m, int n, string::size_type N) {
+        return m * (N + 1) + n;
     }
 };
-
-#pragma clang diagnostic pop
