@@ -18,9 +18,9 @@ TEST(Problem1Test, Basic) {
 
 TEST(Problem2Test, Basic) {
     Solution1to10 s;
-    auto l1 = Solution1to10::ListNode::from_init_list({3, 4, 2});
-    auto l2 = Solution1to10::ListNode::from_init_list({4, 6, 5});
-    auto expect_result = Solution1to10::ListNode::from_init_list({8, 0, 7});
+    auto l1 = ListNode::fromInitList({2, 4, 3});
+    auto l2 = ListNode::fromInitList({5, 6, 4});
+    auto expect_result = ListNode::fromInitList({7, 0, 8});
     auto result = s.addTwoNumbers(l1, l2);
     EXPECT_EQ(expect_result->val, result->val);
     EXPECT_EQ(expect_result->next->val, result->next->val);
@@ -194,4 +194,52 @@ TEST(Problem17Test, Basic) {
 
     vector<string> r2 = {};
     EXPECT_EQ(s.letterCombinations(""), r2);
+}
+
+TEST(Problem18Test, Basic) {
+    Solution18 s;
+
+    vector<int> v1 = {1, 0, -1, 0, -2, 2};
+    vector<vector<int>> r1 = {{-1, 0, 0, 1}, {-2, -1, 1, 2}, {-2, 0, 0, 2}};
+    sort(r1.begin(), r1.end());
+    EXPECT_EQ(s.fourSum(v1, 0), r1);
+
+    vector<int> v2 = {0, 0, 0, 0};
+    vector<vector<int>> r2 = {{0, 0, 0, 0}};
+    EXPECT_EQ(s.fourSum(v2, 0), r2);
+
+    vector<int> v3 = {-3, -1, 0, 2, 4, 5};
+    vector<vector<int>> r3 = {{-3, -1, 0, 5}};
+    EXPECT_EQ(s.fourSum(v3, 1), r3);
+
+    vector<int> v4 = {-3, -2, -1, 0, 0, 1, 2, 3};
+    vector<vector<int>> r4 = {{-3, -2, 2, 3}, {-3, -1, 1, 3}, {-3, 0, 0, 3}, {-3, 0, 1, 2},
+                              {-2, -1, 0, 3}, {-2, -1, 1, 2}, {-2, 0, 0, 2}, {-1, 0, 0, 1}};
+    EXPECT_EQ(s.fourSum(v4, 0), r4);
+}
+
+TEST(Problem19Test, Basic) {
+    Solution19 s;
+
+    auto l1 = ListNode::fromInitList({1, 2, 3, 4, 5});
+    vector<int> r1 = {1, 2, 3, 5};
+    EXPECT_EQ(s.removeNthFromEnd(l1, 2)->toVector(), r1);
+
+    auto l2 = ListNode::fromInitList({1, 2, 3, 4, 5});
+    vector<int> r2 = {2, 3, 4, 5};
+    EXPECT_EQ(s.removeNthFromEnd(l2, 5)->toVector(), r2);
+
+    auto l3 = ListNode::fromInitList({1, 2, 3, 4, 5});
+    vector<int> r3 = {1, 2, 3, 4};
+    EXPECT_EQ(s.removeNthFromEnd(l3, 1)->toVector(), r3);
+}
+
+TEST(Problem20Test, Basic) {
+    Solution20 s;
+
+    EXPECT_EQ(s.isValid("()"), true);
+    EXPECT_EQ(s.isValid("()[]{}"), true);
+    EXPECT_EQ(s.isValid("(]"), false);
+    EXPECT_EQ(s.isValid("([)]"), false);
+    EXPECT_EQ(s.isValid("{[]}"), true);
 }

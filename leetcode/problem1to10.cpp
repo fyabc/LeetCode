@@ -3,6 +3,8 @@
 //
 
 #include "support/IO.h"
+#include "support/ForwardList.h"
+
 #include <vector>
 #include <algorithm>
 #include <unordered_map>
@@ -40,33 +42,6 @@ public:
     }
 
     /// Problem 2
-
-    struct ListNode {
-        int val;
-        ListNode *next;
-        explicit ListNode(int x) : val(x), next(nullptr) {}
-
-        /**
-         * Create list from container elements in reversed order.
-         * @tparam ContainerType
-         * @param container
-         * @return
-         */
-        template <typename ContainerType>
-        static ListNode* from_container_reversed(const ContainerType& container) {
-            ListNode* result = nullptr;
-            for (auto&& item : container) {
-                auto newNode = new ListNode(item);
-                newNode->next = result;
-                result = newNode;
-            }
-            return result;
-        }
-
-        inline static ListNode* from_init_list(const initializer_list<int>& initializerList) {
-            return from_container_reversed(initializerList);
-        }
-    };
 
     static ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
         ListNode* result = nullptr;

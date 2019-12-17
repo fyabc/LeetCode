@@ -3,8 +3,10 @@
 //
 
 #include "support/IO.h"
+#include "support/ForwardList.h"
 
 #include <numeric>
+#include <stack>
 
 using namespace std;
 
@@ -257,8 +259,108 @@ public:
         if (N < 4 || nums.front() > 0 || nums.back() < 0)
             return {};
 
+        for (vector<int>::size_type i = 0; i < N - 3; ++i) {
+            int a = nums[i];
+            if (a * 4 > target) break;
 
+            threeSumInternal(nums, target, a, i, result);
+        }
 
-        return {};
+        sort(result.begin(), result.end());
+        result.erase(unique(result.begin(), result.end()), result.end());
+
+        return result;
+    }
+
+private:
+    static void threeSumInternal(vector<int>& nums, int target,
+        int a, vector<int>::size_type i, vector<vector<int>>& result) {
+        auto N = nums.size();
+        for (vector<int>::size_type j = i + 1; j < N - 2; ++j) {
+            int b = nums[j];
+
+            vector<int>::size_type start = j + 1, end = N - 1;
+
+            while (start < end) {
+                auto c = nums[start], d = nums[end], s = a + b + c + d;
+
+                if (d * 4 < target) {
+                    j = N - 2;
+                    break;
+                }
+
+                if (s == target) {
+                    result.push_back({a, b, c, d});
+                    // Continue search for all triplet combinations summing to zero.
+                    // Ensure the unique output.
+                    while (++start < end && nums[start - 1] == nums[start]);
+                    while (--end > start && nums[end + 1] == nums[end]);
+                }
+                else if (s > target) {
+                    --end;
+                }
+                else {
+                    ++start;
+                }
+            }
+        }
+    }
+};
+
+class Solution19 {
+public:
+    static ListNode* removeNthFromEnd(ListNode* head, int n) {
+        int length = getLength(head);
+
+        if (n == length) {
+            // Remove the head.
+            head = head->next;
+            return head;
+        }
+
+        auto ptr = head;
+        for (int i = 0; i < length - n - 1; ++i)
+            ptr = ptr->next;
+
+        ptr->next = ptr->next->next;
+        return head;
+    }
+
+private:
+    static int getLength(ListNode* head) {
+        int length = 0;
+        for (auto ptr = head; ptr != nullptr; ptr = ptr->next)
+            ++length;
+        return length;
+    }
+};
+
+class Solution20 {
+public:
+    static bool isValid(const string& s) {
+        std::stack<char> parentheses;
+        for (char ch: s) {
+            if (isOpen(ch))
+                parentheses.push(ch);
+            else {
+                if (parentheses.empty())
+                    return false;
+                if (match(parentheses.top(), ch)) {
+                    parentheses.pop();
+                }
+                else {
+                    return false;
+                }
+            }
+        }
+        return parentheses.empty();
+    }
+
+private:
+    inline static bool isOpen(char ch) {
+        return ch == '(' || ch == '[' || ch == '{';
+    }
+    inline static bool match(char l, char r) {
+        return (l == '(' && r == ')') || (l == '[' && r == ']') || (l == '{' && r == '}');
     }
 };
