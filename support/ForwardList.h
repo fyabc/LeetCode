@@ -20,9 +20,9 @@ struct ListNodeT {
 
     template <typename ContainerType>
     static ListNodeT* fromContainer(const ContainerType& container) {
-        ListNode* result = nullptr;
+        ListNodeT* result = nullptr;
         for (auto it = std::rbegin(container); it != std::rend(container); ++it) {
-            auto newNode = new ListNode(*it);
+            auto newNode = new ListNodeT(*it);
             newNode->next = result;
             result = newNode;
         }
@@ -31,16 +31,16 @@ struct ListNodeT {
 
     template <typename ContainerType>
     static ListNodeT* fromContainerReversed(const ContainerType& container) {
-        ListNode* result = nullptr;
+        ListNodeT* result = nullptr;
         for (auto&& item : container) {
-            auto newNode = new ListNode(item);
+            auto newNode = new ListNodeT(item);
             newNode->next = result;
             result = newNode;
         }
         return result;
     }
 
-    inline static ListNodeT* fromInitList(const std::initializer_list<int>& initializerList) {
+    inline static ListNodeT* fromInitList(const std::initializer_list<T>& initializerList) {
         return fromContainer(initializerList);
     }
 
