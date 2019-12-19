@@ -23,18 +23,18 @@ public:
     }
 
     void union_(int p, int q) {
-        int p_root = find(p);
-        int q_root = find(q);
-        if (p_root == q_root) return;
+        int pRoot = find(p);
+        int qRoot = find(q);
+        if (pRoot == qRoot) return;
 
         // Merge by rank.
-        if (sizes[p_root] > sizes[q_root]) {
-            id[q_root] = p_root;
-            sizes[p_root] += sizes[q_root];
+        if (sizes[pRoot] > sizes[qRoot]) {
+            id[qRoot] = pRoot;
+            sizes[pRoot] += sizes[qRoot];
         }
         else {
-            id[p_root] = q_root;
-            sizes[q_root] += sizes[p_root];
+            id[pRoot] = qRoot;
+            sizes[qRoot] += sizes[pRoot];
         }
         --count_;
     }

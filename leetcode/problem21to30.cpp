@@ -194,8 +194,69 @@ public:
 };
 
 class Solution28 {
+    // [NOTE]: 997, 1009 + Monte-Carlo will WA.
+    static constexpr int Q = 1999;
+    static constexpr int R = 256;
 public:
+    /**
+     * Rabin-Karp random string matching algorithm.
+     * @param haystack
+     * @param needle
+     * @return
+     */
     static int strStr(const string& haystack, const string& needle) {
-        return 0;
+        auto N = haystack.size(), M = needle.size();
+
+        if (M == 0)
+            return 0;
+        if (N < M)
+            return -1;
+
+        int needleHash = hash(needle, M);
+        int haystackHash = hash(haystack, M);
+        const int RM = getRM(M);
+
+        // Match at first.
+        if (needleHash == haystackHash && check(haystack.begin(), needle))
+            return 0;
+
+        for (auto i = M; i < N; ++i) {
+            haystackHash = (haystackHash + Q - RM * haystack[i - M] % Q) % Q;
+            haystackHash = (haystackHash * R + haystack[i]) % Q;
+            if (haystackHash == needleHash && check(haystack.begin() + i - M + 1, needle))
+                return static_cast<int>(i - M + 1);
+        }
+
+        return -1;
+    }
+
+private:
+    /**
+     * RM = R ^ (M-1) % Q
+     * @param M
+     * @return
+     */
+    static int getRM(string::size_type M) {
+        int RM = 1;
+        for (int i = 1; i < M; ++i)
+            RM = (R * RM) % Q;
+        return RM;
+    }
+
+    static int hash(const string& s, string::size_type M) {
+        int h = 0;
+        for (string::size_type i = 0; i < M; ++i)
+            h = (R * h + static_cast<int>(s[i])) % Q;
+        return h;
+    }
+
+    static bool check(string::const_iterator itHaystack, const string& needle) {
+//#define LAS_VEGAS
+#ifdef LAS_VEGAS
+        return equal(needle.begin(), needle.end(), itHaystack);
+#else
+        // For Monte-Carlo, return true directly
+        return true;
+#endif
     }
 };

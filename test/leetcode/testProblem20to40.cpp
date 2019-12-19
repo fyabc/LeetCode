@@ -95,4 +95,6 @@ TEST(Problem28Test, Basic) {
     EXPECT_EQ(s.strStr("hello", "ll"), 2);
     EXPECT_EQ(s.strStr("aaaaa", "bba"), -1);
     EXPECT_EQ(s.strStr("aaaaa", ""), 0);
+    EXPECT_EQ(s.strStr("abbbaaaaaaabbababbbbabababbbbbbbaaaaaaabbaaabbaababbbbababababaabbbbbbaaaaababbbbaaabababbbaaaabbbaabbbbbbabababbabaaaaabaabaaababbbaaabaababbaaabaaababbabbbbababaaaaaaababaabaabbaabbbaaabaaaaaa",
+                       "aabaaaabababbbabababbbaabaabaaaaabaabbbaabbbbba"), -1);
 }
