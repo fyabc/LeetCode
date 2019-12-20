@@ -2,11 +2,15 @@
 // Created by v-yaf on 12/17/2019.
 //
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "hicpp-signed-bitwise"
+
 #include "support/IO.h"
 #include "support/ForwardList.h"
 
 #include <stack>
 #include <queue>
+#include <unordered_set>
 
 using namespace std;
 
@@ -51,13 +55,13 @@ public:
         vector<string> result;
         string s;
 
-        dfs(result, s, 0, 0, n);
+        search(result, s, 0, 0, n);
 
         return result;
     }
 
 private:
-    static void dfs(vector<string>& result, string& s, int l, int r, int n) {
+    static void search(vector<string>& result, string& s, int l, int r, int n) {
         if (l == n && r == n) {
             result.push_back(s);
             return;
@@ -65,13 +69,13 @@ private:
         // Push
         if (l < n) {
             s.push_back('(');
-            dfs(result, s, l + 1, r, n);
+            search(result, s, l + 1, r, n);
             s.pop_back();
         }
         // Pop
         if (r < l) {
             s.push_back(')');
-            dfs(result, s, l, r + 1, n);
+            search(result, s, l, r + 1, n);
             s.pop_back();
         }
     }
@@ -162,6 +166,16 @@ public:
     }
 
 private:
+    /**
+     * Reverse every K nodes.
+     * After each internal recursive call, append the `curr` node after the `newCurr`.
+     *
+     * @param curr
+     * @param prev
+     * @param i
+     * @param k
+     * @return
+     */
     static pair<ListNode*, ListNode*> reverseK(ListNode* curr, ListNode* prev, int i, int k) {
         if (curr == nullptr)
             return {nullptr, nullptr};
@@ -200,6 +214,7 @@ class Solution28 {
 public:
     /**
      * Rabin-Karp random string matching algorithm.
+     * See https://en.wikipedia.org/wiki/Rabin%E2%80%93Karp_algorithm.
      * @param haystack
      * @param needle
      * @return
@@ -251,8 +266,8 @@ private:
     }
 
     static bool check(string::const_iterator itHaystack, const string& needle) {
-//#define LAS_VEGAS
-#ifdef LAS_VEGAS
+//#define S28_LAS_VEGAS
+#ifdef S28_LAS_VEGAS
         return equal(needle.begin(), needle.end(), itHaystack);
 #else
         // For Monte-Carlo, return true directly
@@ -260,3 +275,131 @@ private:
 #endif
     }
 };
+
+class Solution29 {
+    static constexpr int BitSize = 8 * sizeof(int);
+public:
+    static int divide(int dividend, int divisor) {
+        bool negative = (dividend < 0) ^ (divisor < 0);
+        auto m = abs(static_cast<long long>(dividend));
+        auto n = abs(static_cast<long long>(divisor));
+        auto q = 0LL;
+
+        // Scan from left to right
+        for (int i = BitSize - 1; i >= 0; --i) {
+            if ((n << i) <= m) {
+                // If n * 2^i <= m, m -= n * 2^i
+                m -= n << i;
+                q |= 1LL << i;
+            }
+        }
+
+        if (negative)
+            q *= -1;
+
+        if (q > numeric_limits<int>::max() || q < numeric_limits<int>::min())
+            q = numeric_limits<int>::max();
+
+        return static_cast<int>(q);
+    }
+};
+
+class Solution30 {
+    static constexpr int Q = 1999;
+    static constexpr int R = 256;
+public:
+    /**
+     * Inspired from Rabin-Karp algorithm.
+     * May not the best solution.
+     * @param s
+     * @param words
+     * @return
+     */
+    static vector<int> findSubstring(const string& s, vector<string>& words) {
+        if (words.empty())
+            return {};
+
+        auto N = s.size();
+        auto M = words[0].size();
+        auto K = words.size();
+
+        if (N < K * M)
+            return {};
+
+        vector<int> results;
+        unordered_map<string, int> wordCount;
+        unordered_set<int> wordHashes;
+        for (const auto& word: words) {
+            wordHashes.insert(hash(word, M));
+            ++wordCount[word];
+        }
+
+        int sHash = hash(s, M);
+        if (wordHashes.find(sHash) != wordHashes.end()) {
+            if (checkAtI(s, 0, M, K, wordCount))
+                results.push_back(0);
+        }
+
+        const int RM = getRM(M);
+        auto searchEnd = N - K * M + M;
+        for (string::size_type i = M; i < searchEnd; ++i) {
+            sHash = (sHash + Q - RM * s[i - M] % Q) % Q;
+            sHash = (sHash * R + s[i]) % Q;
+
+            // If the current hash value equals to one of the words, run the detailed check.
+            if (wordHashes.find(sHash) != wordHashes.end()) {
+                if (checkAtI(s, i - M + 1, M, K, wordCount))
+                    results.push_back(static_cast<int>(i - M + 1));
+            }
+        }
+
+        return results;
+    }
+
+private:
+    /**
+     * RM = R ^ (M-1) % Q
+     * @param M
+     * @return
+     */
+    static int getRM(string::size_type M) {
+        int RM = 1;
+        for (int i = 1; i < M; ++i)
+            RM = (R * RM) % Q;
+        return RM;
+    }
+
+    static int hash(const string& s, string::size_type M) {
+        int h = 0;
+        for (string::size_type i = 0; i < M; ++i)
+            h = (R * h + static_cast<int>(s[i])) % Q;
+        return h;
+    }
+
+    /**
+     * Check if s[i:i + K * M] contains all words.
+     * @param s
+     * @param i
+     * @param M
+     * @param K
+     * @param wordCount
+     * @return
+     */
+    static bool checkAtI(const string& s, string::size_type i,
+                         string::size_type M, string::size_type K, const unordered_map<string, int>& wordCount) {
+        auto loopEnd = i + K * M;
+        auto newWordCount = wordCount;
+        for (auto j = i; j != loopEnd; j += M) {
+            auto sub = s.substr(j, M);
+            auto newCountItem = newWordCount.find(sub);
+            if (newCountItem == newWordCount.end())
+                return false;
+            if (--newCountItem->second == 0) {
+                newWordCount.erase(newCountItem);
+            }
+        }
+        return true;
+    }
+};
+
+#pragma clang diagnostic pop

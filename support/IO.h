@@ -27,8 +27,8 @@ inline void println(Arg1&& arg1, Arg2&& arg2, Args&&... args) {
 }
 
 template <typename ContainerT>
-inline void println_container(ContainerT&& container, const std::string& sep=", ") {
-    std::cout << '[';
+inline void println_container(ContainerT&& container, const std::string& head="", const std::string& sep=", ") {
+    std::cout << head << '[';
     for (auto&& item: container) {
         std::cout << item << sep;
     }
