@@ -23,8 +23,7 @@ public:
             if (p1->val < p2->val) {
                 tail = insertAtTail(tail, p1->val);
                 p1 = p1->next;
-            }
-            else {
+            } else {
                 tail = insertAtTail(tail, p2->val);
                 p2 = p2->next;
             }
@@ -84,7 +83,7 @@ private:
 class Solution23 {
 public:
     struct ListNodeComparer {
-        inline bool operator() (ListNode* a, ListNode* b) { return a->val > b->val; }
+        inline bool operator()(ListNode* a, ListNode* b) { return a->val > b->val; }
     };
 
     static ListNode* mergeKLists(vector<ListNode*>& lists) {
@@ -181,7 +180,7 @@ private:
             return {nullptr, nullptr};
         if (i == k)
             return {curr, prev};
-        auto [newCurr, newPrev] = reverseK(curr->next, prev->next, i + 1, k);
+        auto[newCurr, newPrev] = reverseK(curr->next, prev->next, i + 1, k);
         if (newCurr == nullptr)
             return {nullptr, nullptr};
         prev->next = curr->next;
@@ -280,7 +279,7 @@ class Solution29 {
     static constexpr int BitSize = 8 * sizeof(int);
 public:
     static int divide(int dividend, int divisor) {
-        bool negative = (dividend < 0) ^ (divisor < 0);
+        bool negative = (dividend < 0) ^(divisor < 0);
         auto m = abs(static_cast<long long>(dividend));
         auto n = abs(static_cast<long long>(divisor));
         auto q = 0LL;

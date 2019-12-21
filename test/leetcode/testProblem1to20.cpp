@@ -11,8 +11,8 @@ using namespace std;
 TEST(Problem1Test, Basic) {
     Solution1to10 s;
 
-    std::vector<int> input {2, 7, 11, 15};
-    std::vector<int> expect_result {0, 1};
+    std::vector<int> input{2, 7, 11, 15};
+    std::vector<int> expect_result{0, 1};
     EXPECT_EQ(s.twoSum(input, 9), expect_result);
 }
 
@@ -38,25 +38,25 @@ TEST(Problem3Test, Basic) {
 TEST(Problem4Test, Basic) {
     Solution1to10 s;
 
-    vector<int> p1 {1, 3, 4, 8, 9}, q1 {2, 5, 6, 7, 10, 11};
+    vector<int> p1{1, 3, 4, 8, 9}, q1{2, 5, 6, 7, 10, 11};
     EXPECT_EQ(s.findMedianSortedArrays(p1, q1), 6.0);
 
-    vector<int> p2 {1, 2, 3}, q2 {4, 5, 6, 7, 8, 9, 10, 11};
+    vector<int> p2{1, 2, 3}, q2{4, 5, 6, 7, 8, 9, 10, 11};
     EXPECT_EQ(s.findMedianSortedArrays(p2, q2), 6.0);
 
-    vector<int> p3 {9, 10, 11}, q3 {1, 2, 3, 4, 5, 6, 7, 8};
+    vector<int> p3{9, 10, 11}, q3{1, 2, 3, 4, 5, 6, 7, 8};
     EXPECT_EQ(s.findMedianSortedArrays(p3, q3), 6.0);
 
-    vector<int> p4 {1, 3}, q4 {2};
+    vector<int> p4{1, 3}, q4{2};
     EXPECT_EQ(s.findMedianSortedArrays(p4, q4), 2.0);
 
-    vector<int> p5 {1, 2}, q5 {3, 4};
+    vector<int> p5{1, 2}, q5{3, 4};
     EXPECT_EQ(s.findMedianSortedArrays(p5, q5), 2.5);
 
-    vector<int> p6 {0, 0}, q6 {0, 0};
+    vector<int> p6{0, 0}, q6{0, 0};
     EXPECT_EQ(s.findMedianSortedArrays(p6, q6), 0.0);
 
-    vector<int> p7 {}, q7 {1, 4, 7, 10};
+    vector<int> p7{}, q7{1, 4, 7, 10};
     EXPECT_EQ(s.findMedianSortedArrays(p7, q7), 5.5);
 }
 
@@ -116,7 +116,7 @@ TEST(Problem10Test, Basic) {
 TEST(Problem11Test, Basic) {
     Solution11 s;
 
-    vector<int> v1 {1, 8, 6, 2, 5, 4, 8, 3, 7};
+    vector<int> v1{1, 8, 6, 2, 5, 4, 8, 3, 7};
     EXPECT_EQ(s.maxArea(v1), 49);
 }
 
@@ -160,12 +160,18 @@ TEST(Problem15Test, Basic) {
     Solution15 s;
 
     vector<int> v1 = {-1, 0, 1, 2, -1, -4};
-    vector<vector<int>> r1 = {{-1, 0, 1}, {-1, -1, 2}};
+    vector<vector<int>> r1 = {{-1, 0,  1},
+                              {-1, -1, 2}};
     sort(r1.begin(), r1.end());
     EXPECT_EQ(s.threeSum(v1), r1);
 
     vector<int> v2 = {-4, -2, -2, -2, 0, 1, 2, 2, 2, 3, 3, 4, 4, 6, 6};
-    vector<vector<int>> r2 = {{-4, -2, 6}, {-4, 0, 4}, {-4, 1, 3}, {-4, 2, 2}, {-2, -2, 4}, {-2, 0, 2}};
+    vector<vector<int>> r2 = {{-4, -2, 6},
+                              {-4, 0,  4},
+                              {-4, 1,  3},
+                              {-4, 2,  2},
+                              {-2, -2, 4},
+                              {-2, 0,  2}};
     EXPECT_EQ(s.threeSum(v2), r2);
 
     vector<int> v3(3000, 0);
@@ -200,7 +206,9 @@ TEST(Problem18Test, Basic) {
     Solution18 s;
 
     vector<int> v1 = {1, 0, -1, 0, -2, 2};
-    vector<vector<int>> r1 = {{-1, 0, 0, 1}, {-2, -1, 1, 2}, {-2, 0, 0, 2}};
+    vector<vector<int>> r1 = {{-1, 0,  0, 1},
+                              {-2, -1, 1, 2},
+                              {-2, 0,  0, 2}};
     sort(r1.begin(), r1.end());
     EXPECT_EQ(s.fourSum(v1, 0), r1);
 
@@ -213,8 +221,14 @@ TEST(Problem18Test, Basic) {
     EXPECT_EQ(s.fourSum(v3, 1), r3);
 
     vector<int> v4 = {-3, -2, -1, 0, 0, 1, 2, 3};
-    vector<vector<int>> r4 = {{-3, -2, 2, 3}, {-3, -1, 1, 3}, {-3, 0, 0, 3}, {-3, 0, 1, 2},
-                              {-2, -1, 0, 3}, {-2, -1, 1, 2}, {-2, 0, 0, 2}, {-1, 0, 0, 1}};
+    vector<vector<int>> r4 = {{-3, -2, 2, 3},
+                              {-3, -1, 1, 3},
+                              {-3, 0,  0, 3},
+                              {-3, 0,  1, 2},
+                              {-2, -1, 0, 3},
+                              {-2, -1, 1, 2},
+                              {-2, 0,  0, 2},
+                              {-1, 0,  0, 1}};
     EXPECT_EQ(s.fourSum(v4, 0), r4);
 }
 

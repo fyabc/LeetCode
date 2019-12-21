@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.13)
 
-add_executable(Google_Tests_leetcode_run
+add_executable(Google_Tests_leetcode_run_1to40
                testProblem1to20.cpp
-               testProblem20to40.cpp)
-target_link_libraries(Google_Tests_leetcode_run gtest gtest_main)
+               testProblem21to40.cpp)
+add_executable(Google_Tests_leetcode_run_41to80
+               testProblem41to60.cpp
+               testProblem61to80.cpp)
+target_link_libraries(Google_Tests_leetcode_run_1to40 gtest gtest_main)
+target_link_libraries(Google_Tests_leetcode_run_41to80 gtest gtest_main)

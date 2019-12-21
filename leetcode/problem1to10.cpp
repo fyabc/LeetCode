@@ -163,8 +163,7 @@ public:
             if (nums1[i - 1] > nums2[j]) {
                 // i too large
                 hi = i - 1;
-            }
-            else {
+            } else {
                 lo = hi = i;
             }
         }
@@ -183,7 +182,8 @@ public:
     }
 
 private:
-    static inline double getMedian(vector<int>::size_type i, vector<int>::size_type j, vector<int>& nums1, vector<int>& nums2, bool odd) {
+    static inline double
+    getMedian(vector<int>::size_type i, vector<int>::size_type j, vector<int>& nums1, vector<int>& nums2, bool odd) {
         double max_lo;
         if (i == 0)
             max_lo = static_cast<double>(nums2[j - 1]);
@@ -194,8 +194,7 @@ private:
 
         if (odd) {
             return max_lo;
-        }
-        else {
+        } else {
             double min_hi;
             if (i == nums1.size())
                 min_hi = static_cast<double>(nums2[j]);
@@ -391,8 +390,7 @@ public:
                 if (j < N - 1 && p[j + 1] == '*') {
                     // Match Kleene star.
                     dp[pos(i, j, N)] = dp[pos(i, j + 2, N)] || (firstMatch && dp[pos(i + 1, j, N)]);
-                }
-                else {
+                } else {
                     dp[pos(i, j, N)] = firstMatch && dp[pos(i + 1, j + 1, N)];
                 }
             }

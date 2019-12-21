@@ -15,7 +15,8 @@
 template <typename T>
 struct ListNodeT {
     T val;
-    ListNodeT *next;
+    ListNodeT* next;
+
     explicit ListNodeT(const T& x) : val(x), next(nullptr) {}
 
     template <typename ContainerType>
@@ -23,17 +24,6 @@ struct ListNodeT {
         ListNodeT* result = nullptr;
         for (auto it = std::rbegin(container); it != std::rend(container); ++it) {
             auto newNode = new ListNodeT(*it);
-            newNode->next = result;
-            result = newNode;
-        }
-        return result;
-    }
-
-    template <typename ContainerType>
-    static ListNodeT* fromContainerReversed(const ContainerType& container) {
-        ListNodeT* result = nullptr;
-        for (auto&& item : container) {
-            auto newNode = new ListNodeT(item);
             newNode->next = result;
             result = newNode;
         }

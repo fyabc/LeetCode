@@ -12,14 +12,16 @@ namespace leetcode {
 
 class UFSet {
 public:
-    explicit UFSet(int N): id(new int[N]), sizes(new int[N]), count_(N) {
-        std::iota(id, id + N, 0);
-        std::fill(sizes, sizes + N, 1);
+    explicit UFSet(int N) : id_(new int[N]), sizes_(new int[N]), count_(N) {
+        std::iota(id_, id_ + N, 0);
+        std::fill(sizes_, sizes_ + N, 1);
     }
+
     UFSet(const UFSet& other) = delete;
+
     ~UFSet() {
-        delete[] id;
-        delete[] sizes;
+        delete[] id_;
+        delete[] sizes_;
     }
 
     void union_(int p, int q) {
@@ -28,32 +30,33 @@ public:
         if (pRoot == qRoot) return;
 
         // Merge by rank.
-        if (sizes[pRoot] > sizes[qRoot]) {
-            id[qRoot] = pRoot;
-            sizes[pRoot] += sizes[qRoot];
-        }
-        else {
-            id[pRoot] = qRoot;
-            sizes[qRoot] += sizes[pRoot];
+        if (sizes_[pRoot] > sizes_[qRoot]) {
+            id_[qRoot] = pRoot;
+            sizes_[pRoot] += sizes_[qRoot];
+        } else {
+            id_[pRoot] = qRoot;
+            sizes_[qRoot] += sizes_[pRoot];
         }
         --count_;
     }
+
     bool connected(int p, int q) {
         return find(p) == find(q);
     }
+
     int count() { return count_; }
 
 private:
-    int* id;
-    int* sizes;
+    int* id_;
+    int* sizes_;
     int count_;
 
     int find(int p) {
         // Path compression.
-        if (p != id[p]) {
-            id[p] = find(id[p]);
+        if (p != id_[p]) {
+            id_[p] = find(id_[p]);
         }
-        return id[p];
+        return id_[p];
     }
 };
 

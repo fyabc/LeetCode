@@ -95,8 +95,9 @@ TEST(Problem28Test, Basic) {
     EXPECT_EQ(s.strStr("hello", "ll"), 2);
     EXPECT_EQ(s.strStr("aaaaa", "bba"), -1);
     EXPECT_EQ(s.strStr("aaaaa", ""), 0);
-    EXPECT_EQ(s.strStr("abbbaaaaaaabbababbbbabababbbbbbbaaaaaaabbaaabbaababbbbababababaabbbbbbaaaaababbbbaaabababbbaaaabbbaabbbbbbabababbabaaaaabaabaaababbbaaabaababbaaabaaababbabbbbababaaaaaaababaabaabbaabbbaaabaaaaaa",
-                       "aabaaaabababbbabababbbaabaabaaaaabaabbbaabbbbba"), -1);
+    EXPECT_EQ(s.strStr(
+        "abbbaaaaaaabbababbbbabababbbbbbbaaaaaaabbaaabbaababbbbababababaabbbbbbaaaaababbbbaaabababbbaaaabbbaabbbbbbabababbabaaaaabaabaaababbbaaabaababbaaabaaababbabbbbababaaaaaaababaabaabbaabbbaaabaaaaaa",
+        "aabaaaabababbbabababbbaabaabaaaaabaabbbaabbbbba"), -1);
 }
 
 TEST(Problem29Test, Basic) {
@@ -204,4 +205,69 @@ TEST(Problem36Test, Basic) {
     auto b2 = b1;
     b2[0][0] = '8';
     EXPECT_EQ(s.isValidSudoku(b2), false);
+}
+
+TEST(Problem37Test, Basic) {
+    vector<vector<char>> b1 = {
+        {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
+        {'6', '.', '.', '1', '9', '5', '.', '.', '.'},
+        {'.', '9', '8', '.', '.', '.', '.', '6', '.'},
+        {'8', '.', '.', '.', '6', '.', '.', '.', '3'},
+        {'4', '.', '.', '8', '.', '3', '.', '.', '1'},
+        {'7', '.', '.', '.', '2', '.', '.', '.', '6'},
+        {'.', '6', '.', '.', '.', '.', '2', '8', '.'},
+        {'.', '.', '.', '4', '1', '9', '.', '.', '5'},
+        {'.', '.', '.', '.', '8', '.', '.', '7', '9'},
+    };
+    vector<vector<char>> r1 = {
+        {'5', '3', '4', '6', '7', '8', '9', '1', '2'},
+        {'6', '7', '2', '1', '9', '5', '3', '4', '8'},
+        {'1', '9', '8', '3', '4', '2', '5', '6', '7'},
+        {'8', '5', '9', '7', '6', '1', '4', '2', '3'},
+        {'4', '2', '6', '8', '5', '3', '7', '9', '1'},
+        {'7', '1', '3', '9', '2', '4', '8', '5', '6'},
+        {'9', '6', '1', '5', '3', '7', '2', '8', '4'},
+        {'2', '8', '7', '4', '1', '9', '6', '3', '5'},
+        {'3', '4', '5', '2', '8', '6', '1', '7', '9'},
+    };
+    Solution37::solveSudoku(b1);
+    EXPECT_EQ(b1, r1);
+}
+
+TEST(Problem38Test, Basic) {
+    Solution38 s;
+
+    EXPECT_EQ(s.countAndSay(1), "1");
+    EXPECT_EQ(s.countAndSay(4), "1211");
+}
+
+TEST(Problem39Test, Basic) {
+    Solution39 s;
+
+    vector<int> v1 = {2, 3, 6, 7};
+    vector<vector<int>> r1 = {{2, 2, 3},
+                              {7}};
+    EXPECT_EQ(s.combinationSum(v1, 7), r1);
+
+    vector<int> v2 = {2, 3, 5};
+    vector<vector<int>> r2 = {{2, 2, 2, 2},
+                              {2, 3, 3},
+                              {3, 5}};
+    EXPECT_EQ(s.combinationSum(v2, 8), r2);
+}
+
+TEST(Problem40Test, Basic) {
+    Solution40 s;
+
+    vector<int> v1 = {10, 1, 2, 7, 6, 1, 5};
+    vector<vector<int>> r1 = {{1, 1, 6},
+                              {1, 2, 5},
+                              {1, 7},
+                              {2, 6}};
+    EXPECT_EQ(s.combinationSum2(v1, 8), r1);
+
+    vector<int> v2 = {2, 5, 2, 1, 2};
+    vector<vector<int>> r2 = {{1, 2, 2},
+                              {5}};
+    EXPECT_EQ(s.combinationSum2(v2, 5), r2);
 }

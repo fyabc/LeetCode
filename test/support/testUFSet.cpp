@@ -9,7 +9,7 @@ using namespace std;
 using namespace leetcode;
 
 TEST(UFSetTest, BasicUsage) {
-    UFSet ufs {10};
+    UFSet ufs{10};
     EXPECT_EQ(ufs.count(), 10);
     EXPECT_EQ(ufs.connected(7, 8), false);
 

@@ -161,11 +161,9 @@ public:
                     // Ensure the unique output.
                     while (++start < end && nums[start - 1] == nums[start]);
                     while (--end > start && nums[end + 1] == nums[end]);
-                }
-                else if (s > 0) {
+                } else if (s > 0) {
                     --end;
-                }
-                else {
+                } else {
                     ++start;
                 }
             }
@@ -194,11 +192,9 @@ public:
                 if (diff < minDiff) {
                     minDiff = diff;
                     result = s;
-                }
-                else if (s > target) {
+                } else if (s > target) {
                     --end;
-                }
-                else {
+                } else {
                     ++start;
                 }
             }
@@ -224,6 +220,7 @@ public:
 
 private:
     static const string Table[];
+
     static void letterCombinationsI(
         string::const_iterator digitsIt, string::const_iterator digitsEnd,
         string& current, vector<string>& result) {
@@ -274,7 +271,7 @@ public:
 
 private:
     static void threeSumInternal(vector<int>& nums, int target,
-        int a, vector<int>::size_type i, vector<vector<int>>& result) {
+                                 int a, vector<int>::size_type i, vector<vector<int>>& result) {
         auto N = nums.size();
         for (vector<int>::size_type j = i + 1; j < N - 2; ++j) {
             int b = nums[j];
@@ -295,11 +292,9 @@ private:
                     // Ensure the unique output.
                     while (++start < end && nums[start - 1] == nums[start]);
                     while (--end > start && nums[end + 1] == nums[end]);
-                }
-                else if (s > target) {
+                } else if (s > target) {
                     --end;
-                }
-                else {
+                } else {
                     ++start;
                 }
             }
@@ -347,8 +342,7 @@ public:
                     return false;
                 if (match(parentheses.top(), ch)) {
                     parentheses.pop();
-                }
-                else {
+                } else {
                     return false;
                 }
             }
@@ -360,6 +354,7 @@ private:
     inline static bool isOpen(char ch) {
         return ch == '(' || ch == '[' || ch == '{';
     }
+
     inline static bool match(char l, char r) {
         return (l == '(' && r == ')') || (l == '[' && r == ']') || (l == '{' && r == '}');
     }
