@@ -121,68 +121,34 @@ inline void printlnC(const std::initializer_list<T>& container,
     impl::_printlnContainerGeneric(container, head, sep, "(", ")", os, true);
 }
 
-template <typename T>
-inline void printlnC(const std::vector<T>& container,
-                     const std::string& head = "", const std::string& sep = ", ",
-                     std::ostream& os = std::cout) {
-    impl::_printlnContainerGeneric(container, head, sep, "[", "]", os, false);
+#define PRINTLNC_LP_RP(ContainerType, LP, RP)                                       \
+template <typename T>                                                               \
+inline void printlnC(const ContainerType <T>& container,                            \
+                     const std::string& head = "", const std::string& sep = ", ",   \
+                     std::ostream& os = std::cout) {                                \
+    impl::_printlnContainerGeneric(container, head, sep, LP, RP, os, false);        \
 }
 
-template <typename K, typename V>
-inline void printlnC(const std::unordered_map<K, V>& container,
-                     const std::string& head = "", const std::string& sep = ", ",
-                     std::ostream& os = std::cout) {
-    impl::_printlnMap(container, head, sep, os);
+PRINTLNC_LP_RP(std::vector, "[", "]")
+PRINTLNC_LP_RP(std::unordered_set, "{", "}")
+PRINTLNC_LP_RP(std::unordered_multiset, "{", "}")
+PRINTLNC_LP_RP(std::set, "{", "}")
+PRINTLNC_LP_RP(std::multiset, "{", "}")
+
+
+#define PRINTLNC_MAP(MapType)                                                       \
+template <typename K, typename V>                                                   \
+inline void printlnC(const MapType <K, V>& container,                               \
+                     const std::string& head = "", const std::string& sep = ", ",   \
+                     std::ostream& os = std::cout) {                                \
+    impl::_printlnMap(container, head, sep, os);                                    \
 }
 
-template <typename K, typename V>
-inline void printlnC(const std::map<K, V>& container,
-                              const std::string& head = "", const std::string& sep = ", ",
-                              std::ostream& os = std::cout) {
-    impl::_printlnMap(container, head, sep, os);
-}
+PRINTLNC_MAP(std::unordered_map)
+PRINTLNC_MAP(std::unordered_multimap)
+PRINTLNC_MAP(std::map)
+PRINTLNC_MAP(std::multimap)
 
-template <typename K, typename V>
-inline void printlnC(const std::unordered_multimap<K, V>& container,
-                              const std::string& head = "", const std::string& sep = ", ",
-                              std::ostream& os = std::cout) {
-    impl::_printlnMap(container, head, sep, os);
-}
-
-template <typename K, typename V>
-inline void printlnC(const std::multimap<K, V>& container,
-                              const std::string& head = "", const std::string& sep = ", ",
-                              std::ostream& os = std::cout) {
-    impl::_printlnMap(container, head, sep, os);
-}
-
-template <typename T>
-inline void printlnC(const std::unordered_set<T>& container,
-                              const std::string& head = "", const std::string& sep = ", ",
-                              std::ostream& os = std::cout) {
-    impl::_printlnContainerGeneric(container, head, sep, "{", "}", os, false);
-}
-
-template <typename T>
-inline void printlnC(const std::set<T>& container,
-                     const std::string& head = "", const std::string& sep = ", ",
-                     std::ostream& os = std::cout) {
-    impl::_printlnContainerGeneric(container, head, sep, "{", "}", os, false);
-}
-
-template <typename T>
-inline void printlnC(const std::unordered_multiset<T>& container,
-                              const std::string& head = "", const std::string& sep = ", ",
-                              std::ostream& os = std::cout) {
-    impl::_printlnContainerGeneric(container, head, sep, "{", "}", os, false);
-}
-
-template <typename T>
-inline void printlnC(const std::multiset<T>& container,
-                     const std::string& head = "", const std::string& sep = ", ",
-                     std::ostream& os = std::cout) {
-    impl::_printlnContainerGeneric(container, head, sep, "{", "}", os, false);
-}
 
 template <typename T1, typename T2>
 inline std::ostream& operator<<(std::ostream& ostream, const std::pair<T1, T2>& pair) {
