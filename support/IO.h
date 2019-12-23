@@ -93,9 +93,6 @@ void _printMap(const MappingT& container, std::ostream& os,
 }
 
 template <typename T>
-class F { static constexpr bool value = false; };
-
-template <typename T>
 inline void print(const T& container) {
     print(container, std::cout);
 }
