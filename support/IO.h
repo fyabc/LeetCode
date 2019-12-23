@@ -7,6 +7,7 @@
 
 #include "support/Common.h"
 
+#include <forward_list>
 #include <initializer_list>
 #include <iostream>
 #include <string>
@@ -52,44 +53,6 @@ template <typename Arg1, typename Arg2, typename... Args>
 inline void printlnV(Arg1&& arg1, Arg2&& arg2, Args&& ... args) {
     std::cout << arg1 << ' ';
     printlnV(std::forward<Arg2>(arg2), std::forward<Args>(args)...);
-}
-
-namespace detail {
-
-template <typename ContainerT>
-void _printContainer(const ContainerT& container, std::ostream& os,
-                     const std::string& sep, const std::string& lp, const std::string& rp,
-                     bool printTypename) {
-    if (printTypename)
-        os << getTypename<ContainerT>();
-    os << lp;
-    std::size_t count = 0;
-    for (auto it = std::begin(container); it != std::end(container); ++it, ++count) {
-        if (count > 0) {
-            os << sep;
-        }
-        print(*it, os);
-    }
-    os << rp;
-}
-
-template <typename MappingT>
-void _printMap(const MappingT& container, std::ostream& os,
-               const std::string& sep, const std::string kvSep,
-               const std::string& lp, const std::string& rp) {
-    os << lp;
-    std::size_t count = 0;
-    for (auto it = container.begin(); it != container.end(); ++it, ++count) {
-        if (count > 0) {
-            os << sep;
-        }
-        print(it->first, os);
-        os << kvSep;
-        print(it->second, os);
-    }
-    os << rp;
-}
-
 }
 
 template <typename T>
@@ -138,13 +101,64 @@ inline void print(const CharType (&string)[N], std::ostream& os) {  \
 }
 
 _IO_PRINT_C_STRING(char)
+
 _IO_PRINT_C_STRING(wchar_t)
+
 _IO_PRINT_C_STRING(char16_t)
+
 _IO_PRINT_C_STRING(char32_t)
 
 template <typename T>
 inline void print(const std::initializer_list<T>& container, std::ostream& os = std::cout) {
-    detail::_printContainer(container, os, ", ", "(", ")", true);
+    detail::_printContainer(container, os, ", ", "initlist(", ")", false);
+}
+
+namespace detail {
+
+template <typename ContainerT>
+void _printContainer(const ContainerT& container, std::ostream& os,
+                     const std::string& sep, const std::string& lp, const std::string& rp,
+                     bool printTypename) {
+    if (printTypename)
+        os << getTypename<ContainerT>();
+    os << lp;
+    std::size_t count = 0;
+    for (auto it = std::begin(container); it != std::end(container); ++it, ++count) {
+        if (count > 0) {
+            os << sep;
+        }
+        print(*it, os);
+    }
+    os << rp;
+}
+
+template <typename SetT>
+inline void _printSet(const SetT& container, std::ostream& os,
+                      const std::string& sep, const std::string& lp, const std::string& rp) {
+    if (container.empty()) {
+        os << "set()";
+        return;
+    }
+    _printContainer(container, os, sep, lp, rp, false);
+}
+
+template <typename MappingT>
+void _printMap(const MappingT& container, std::ostream& os,
+               const std::string& sep, const std::string kvSep,
+               const std::string& lp, const std::string& rp) {
+    os << lp;
+    std::size_t count = 0;
+    for (auto it = container.begin(); it != container.end(); ++it, ++count) {
+        if (count > 0) {
+            os << sep;
+        }
+        print(it->first, os);
+        os << kvSep;
+        print(it->second, os);
+    }
+    os << rp;
+}
+
 }
 
 #define _IO_PRINT_SINGLE_CONTAINER(ContainerType, LP, RP)                   \
@@ -154,12 +168,24 @@ inline void print(const ContainerType <T>& container, std::ostream& os) {   \
 }
 
 _IO_PRINT_SINGLE_CONTAINER(std::vector, "[", "]")
-_IO_PRINT_SINGLE_CONTAINER(std::list, "list[", "]")
-_IO_PRINT_SINGLE_CONTAINER(std::unordered_set, "{", "}")
-_IO_PRINT_SINGLE_CONTAINER(std::unordered_multiset, "{", "}")
-_IO_PRINT_SINGLE_CONTAINER(std::set, "{", "}")
-_IO_PRINT_SINGLE_CONTAINER(std::multiset, "{", "}")
 
+_IO_PRINT_SINGLE_CONTAINER(std::list, "list[", "]")
+
+_IO_PRINT_SINGLE_CONTAINER(std::forward_list, "forward_list[", "]")
+
+#define _IO_PRINT_SET(SetType)                                          \
+template <typename T>                                                   \
+inline void print(const SetType <T>& container, std::ostream& os) {     \
+    detail::_printSet(container, os, ", ", "{", "}");                   \
+}
+
+_IO_PRINT_SET(std::unordered_set)
+
+_IO_PRINT_SET(std::unordered_multiset)
+
+_IO_PRINT_SET(std::set)
+
+_IO_PRINT_SET(std::multiset)
 
 #define _IO_PRINT_MAPPING(MappingType)                                      \
 template <typename K, typename V>                                           \
@@ -168,8 +194,11 @@ inline void print(const MappingType <K, V>& container, std::ostream& os) {  \
 }
 
 _IO_PRINT_MAPPING(std::unordered_map)
+
 _IO_PRINT_MAPPING(std::unordered_multimap)
+
 _IO_PRINT_MAPPING(std::map)
+
 _IO_PRINT_MAPPING(std::multimap)
 
 

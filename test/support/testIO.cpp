@@ -69,10 +69,6 @@ struct MyContainer {
 };
 
 TEST(TestPrint, Container) {
-    EXPECT_EQ(
-        CAPTURE_STDOUT(print({1, 2, 4})),
-        "class std::initializer_list<int>(1, 2, 4)");
-
     int N[] = {1, 2, 4};
     EXPECT_EQ(
         CAPTURE_STDOUT(print(N)),
@@ -80,7 +76,7 @@ TEST(TestPrint, Container) {
 
     EXPECT_EQ(
         CAPTURE_STDOUT(print({1, 2, 4})),
-        "class std::initializer_list<int>(1, 2, 4)");
+        "initlist(1, 2, 4)");
     EXPECT_EQ(
         CAPTURE_STDOUT(print(vector<int> {1, 2, 4})),
         "[1, 2, 4]");
@@ -88,11 +84,17 @@ TEST(TestPrint, Container) {
         CAPTURE_STDOUT(print(list<int> {1, 2, 4})),
         "list[1, 2, 4]");
     EXPECT_EQ(
+        CAPTURE_STDOUT(print(forward_list<int> {1, 2, 4})),
+        "forward_list[1, 2, 4]");
+    EXPECT_EQ(
         CAPTURE_STDOUT(print(map<string, int>{{"hello", 1}, {"world", 2}})),
         "{hello: 1, world: 2}");
     EXPECT_EQ(
         CAPTURE_STDOUT(print(set<char>{'a', 's', 'c', 'i', 'i'})),
         "{a, c, i, s}");
+    EXPECT_EQ(
+        CAPTURE_STDOUT(print(set<char>{})),
+        "set()");
     EXPECT_EQ(
         CAPTURE_STDOUT(print(multiset<char>{'a', 's', 'c', 'i', 'i'})),
         "{a, c, i, i, s}");

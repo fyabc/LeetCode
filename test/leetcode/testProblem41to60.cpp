@@ -107,8 +107,44 @@ TEST(Problem48Test, Basic) {
 
 TEST(Problem49Test, Basic) {
     vector<string> v1 = {"eat", "tea", "tan", "ate", "nat", "bat"};
-    set<vector<string>> r1 = {{"ate", "eat", "tea"}, {"nat", "tan"}, {"bat"}};
+    set<set<string>> r1 = {{"ate", "eat", "tea"}, {"nat", "tan"}, {"bat"}};
 
     auto out1 = Solution49::groupAnagrams(v1);
-    EXPECT_EQ(set<vector<string>>(out1.begin(), out1.end()), r1);
+    set<set<string>> outSet1;
+    for (const auto& strVec: out1) {
+        outSet1.insert(set<string> {strVec.begin(), strVec.end()});
+    }
+    EXPECT_EQ(outSet1, r1);
+}
+
+TEST(Problem50Test, Basic) {
+    Solution50 s;
+
+    EXPECT_NEAR(s.myPow(2.00000, 10), 1024.00000, 1e-5);
+    EXPECT_NEAR(s.myPow(2.10000, 3), 9.26100, 1e-5);
+    EXPECT_NEAR(s.myPow(2.00000, -2), 0.25000, 1e-5);
+    EXPECT_NEAR(s.myPow(1.00012, 1024), 1.13074, 1e-5);
+}
+
+TEST(Problem51Test, Basic) {
+    Solution51 s;
+
+    vector<vector<string>> r1 = {
+        {".Q..", "...Q", "Q...", "..Q."},
+        {"..Q.", "Q...", "...Q", ".Q.."},
+    };
+    EXPECT_EQ(s.solveNQueens(4), r1);
+}
+
+TEST(Problem52Test, Basic) {
+    Solution52 s;
+
+    EXPECT_EQ(s.totalNQueens(4), 2);
+}
+
+TEST(Problem53Test, Basic) {
+    Solution53 s;
+
+    vector<int> v1 = {-2, 1, -3, 4, -1, 2, 1, -5, 4};
+    EXPECT_EQ(s.maxSubArray(v1), 6);
 }

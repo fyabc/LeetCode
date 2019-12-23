@@ -352,6 +352,51 @@ private:
 class Solution49 {
 public:
     static vector<vector<string>> groupAnagrams(vector<string>& strs) {
-        return {};
+        vector<vector<string>> result;
+
+        // Faster than use char multiset as keys.
+        unordered_map<string, decltype(result.size())> table;
+
+        for (const string& s: strs) {
+            string s1 {s};
+            sort(s1.begin(), s1.end());
+            auto it = table.find(s1);
+            if (it == table.end()) {
+                table.insert(it, make_pair(std::move(s1), result.size()));
+                result.push_back({s});
+            } else {
+                result[it->second].push_back(s);
+            }
+        }
+
+        return result;
+    }
+};
+
+class Solution50 {
+    static constexpr unsigned long long BitMask = 1ULL << (8 * sizeof(unsigned long long) - 1);
+public:
+    static double myPow(double x, int n) {
+        auto n2 = static_cast<long long>(n);
+        if (n2 < 0) {
+            x = 1.0 / x;
+            n2 = -n2;
+        }
+        auto n2u = static_cast<unsigned long long>(n2);
+
+        double result = 1.0;
+
+        for (auto mask = BitMask; mask != 0; mask >>= 1U) {
+            if (result != 1.0)
+                result *= result;
+            if (n2u & mask)
+                result *= x;
+        }
+
+        return result;
+    }
+
+    static double myPowFast(double x, int n) {
+        return pow(x, n);
     }
 };
