@@ -5,9 +5,7 @@
 #ifndef LEETCODE_IO_H
 #define LEETCODE_IO_H
 
-#ifdef __GNUC__
-#include <cxxabi.h>
-#endif
+#include "support/Common.h"
 
 #include <initializer_list>
 #include <iostream>
@@ -18,142 +16,196 @@
 namespace leetcode {
 
 /**
- * Get the string representation of the given typename.
+ * Define some output operators for common types.
  *
- * @tparam T
+ * @tparam T1
+ * @tparam T2
+ * @param ostream
+ * @param pair
  * @return
  */
-template <typename T>
-inline std::string getTypename() {
-#ifdef __GNUC__
-    std::unique_ptr<char, decltype(std::free)> gnuTypename {
-        abi::__cxa_demangle(typeid(T).name(), nullptr, nullptr, nullptr), std::free};
-    return *gnuTypename;
-#else
-    return typeid(T).name();
-#endif
+template <typename T1, typename T2>
+inline std::ostream& operator<<(std::ostream& ostream, const std::pair<T1, T2>& pair) {
+    ostream << "pair(" << pair.first << ", " << pair.second << ")";
+    return ostream;
 }
 
 /**
- * Println anything.
+ * Variadic println.
  *
  * @tparam Args
  * @param args
  */
 template <typename... Args>
-inline void println(Args&&... args);
+inline void printlnV(Args&& ... args);
 
-inline void println() {
+inline void printlnV() {
     std::cout << std::endl;
 }
 
 template <typename Arg1>
-inline void println(Arg1&& arg1) {
+inline void printlnV(Arg1&& arg1) {
     std::cout << arg1 << std::endl;
 }
 
 template <typename Arg1, typename Arg2, typename... Args>
-inline void println(Arg1&& arg1, Arg2&& arg2, Args&& ... args) {
+inline void printlnV(Arg1&& arg1, Arg2&& arg2, Args&& ... args) {
     std::cout << arg1 << ' ';
-    println(std::forward<Arg2>(arg2), std::forward<Args>(args)...);
+    printlnV(std::forward<Arg2>(arg2), std::forward<Args>(args)...);
 }
 
-namespace impl {
+namespace detail {
 
 template <typename ContainerT>
-void _printlnContainerGeneric(const ContainerT& container, const std::string& head,
-                              const std::string& sep, const std::string& lp, const std::string& rp,
-                              std::ostream& os, bool printTypename) {
-    os << head;
+void _printContainer(const ContainerT& container, std::ostream& os,
+                     const std::string& sep, const std::string& lp, const std::string& rp,
+                     bool printTypename) {
     if (printTypename)
         os << getTypename<ContainerT>();
+    os << lp;
+    std::size_t count = 0;
+    for (auto it = std::begin(container); it != std::end(container); ++it, ++count) {
+        if (count > 0) {
+            os << sep;
+        }
+        print(*it, os);
+    }
+    os << rp;
+}
+
+template <typename MappingT>
+void _printMap(const MappingT& container, std::ostream& os,
+               const std::string& sep, const std::string kvSep,
+               const std::string& lp, const std::string& rp) {
     os << lp;
     std::size_t count = 0;
     for (auto it = container.begin(); it != container.end(); ++it, ++count) {
         if (count > 0) {
             os << sep;
         }
-        os << *it;
+        print(it->first, os);
+        os << kvSep;
+        print(it->second, os);
     }
-    os << rp << std::endl;
+    os << rp;
 }
 
-template <typename MappingT>
-void _printlnMap(const MappingT& container,
-                 const std::string& head, const std::string& sep,
-                 std::ostream& os) {
-    os << head << "{";
-    std::size_t count = 0;
-    for (auto it = container.begin(); it != container.end(); ++it, ++count) {
-        if (count > 0) {
-            os << sep;
-        }
-        os << it->first << ": " << it->second;
-    }
-    os << "}" << std::endl;
-}
-
-}
-
-/**
- * Println container.
- *
- * @tparam ContainerT
- * @param container
- * @param head
- * @param sep
- * @param lp
- * @param rp
- * @param os
- */
-template <typename ContainerT>
-void printlnC(const ContainerT& container,
-              const std::string& head = "", const std::string& sep = ", ",
-              const std::string& lp = "(", const std::string& rp = ")",
-              std::ostream& os = std::cout) {
-    impl::_printlnContainerGeneric(container, head, sep, lp, rp, os, true);
 }
 
 template <typename T>
-inline void printlnC(const std::initializer_list<T>& container,
-                     const std::string& head = "", const std::string& sep = ", ",
-                     std::ostream& os = std::cout) {
-    impl::_printlnContainerGeneric(container, head, sep, "(", ")", os, true);
+class F { static constexpr bool value = false; };
+
+template <typename T>
+inline void print(const T& container) {
+    print(container, std::cout);
 }
 
-#define PRINTLNC_LP_RP(ContainerType, LP, RP)                                       \
-template <typename T>                                                               \
-inline void printlnC(const ContainerType <T>& container,                            \
-                     const std::string& head = "", const std::string& sep = ", ",   \
-                     std::ostream& os = std::cout) {                                \
-    impl::_printlnContainerGeneric(container, head, sep, LP, RP, os, false);        \
+template <typename T>
+inline std::enable_if_t<!isContainer<T>::value> print(const T& value, std::ostream& os) {
+    os << value;
 }
 
-PRINTLNC_LP_RP(std::vector, "[", "]")
-PRINTLNC_LP_RP(std::unordered_set, "{", "}")
-PRINTLNC_LP_RP(std::unordered_multiset, "{", "}")
-PRINTLNC_LP_RP(std::set, "{", "}")
-PRINTLNC_LP_RP(std::multiset, "{", "}")
-
-
-#define PRINTLNC_MAP(MapType)                                                       \
-template <typename K, typename V>                                                   \
-inline void printlnC(const MapType <K, V>& container,                               \
-                     const std::string& head = "", const std::string& sep = ", ",   \
-                     std::ostream& os = std::cout) {                                \
-    impl::_printlnMap(container, head, sep, os);                                    \
+template <typename T>
+inline std::enable_if_t<isContainer<T>::value> print(const T& container, std::ostream& os) {
+    detail::_printContainer(container, os, ", ", "(", ")", true);
 }
 
-PRINTLNC_MAP(std::unordered_map)
-PRINTLNC_MAP(std::unordered_multimap)
-PRINTLNC_MAP(std::map)
-PRINTLNC_MAP(std::multimap)
+/**
+ * Special case for basic strings, not print it as container.
+ *
+ * @tparam T
+ * @param string
+ * @param os
+ */
+template <typename T>
+inline void print(const std::basic_string<T>& string, std::ostream& os) {
+    os << string;
+}
+
+/**
+ * Special case for C-strings, not print it as container.
+ *
+ * @tparam N
+ * @param string
+ * @param os
+ */
+#define _IO_PRINT_C_STRING(CharType)                                \
+template <std::size_t N>                                            \
+inline void print(const CharType string[N], std::ostream& os) {     \
+    os << string;                                                   \
+}                                                                   \
+                                                                    \
+template <std::size_t N>                                            \
+inline void print(const CharType (&string)[N], std::ostream& os) {  \
+    os << string;                                                   \
+}
+
+_IO_PRINT_C_STRING(char)
+_IO_PRINT_C_STRING(wchar_t)
+_IO_PRINT_C_STRING(char16_t)
+_IO_PRINT_C_STRING(char32_t)
+
+template <typename T>
+inline void print(const std::initializer_list<T>& container, std::ostream& os = std::cout) {
+    detail::_printContainer(container, os, ", ", "(", ")", true);
+}
+
+#define _IO_PRINT_SINGLE_CONTAINER(ContainerType, LP, RP)                   \
+template <typename T>                                                       \
+inline void print(const ContainerType <T>& container, std::ostream& os) {   \
+    detail::_printContainer(container, os, ", ", (LP), (RP), false);        \
+}
+
+_IO_PRINT_SINGLE_CONTAINER(std::vector, "[", "]")
+_IO_PRINT_SINGLE_CONTAINER(std::list, "list[", "]")
+_IO_PRINT_SINGLE_CONTAINER(std::unordered_set, "{", "}")
+_IO_PRINT_SINGLE_CONTAINER(std::unordered_multiset, "{", "}")
+_IO_PRINT_SINGLE_CONTAINER(std::set, "{", "}")
+_IO_PRINT_SINGLE_CONTAINER(std::multiset, "{", "}")
 
 
-template <typename T1, typename T2>
-inline std::ostream& operator<<(std::ostream& ostream, const std::pair<T1, T2>& pair) {
-    ostream << "pair(" << pair.first << ", " << pair.second << ")";
-    return ostream;
+#define _IO_PRINT_MAPPING(MappingType)                                      \
+template <typename K, typename V>                                           \
+inline void print(const MappingType <K, V>& container, std::ostream& os) {  \
+    detail::_printMap(container, os, ", ", ": ", "{", "}");                 \
+}
+
+_IO_PRINT_MAPPING(std::unordered_map)
+_IO_PRINT_MAPPING(std::unordered_multimap)
+_IO_PRINT_MAPPING(std::map)
+_IO_PRINT_MAPPING(std::multimap)
+
+
+/**
+ * Return a formatted version of string fmt.
+ *
+ * @tparam Args
+ * @param fmt
+ * @param args
+ * @return
+ */
+template <typename... Args>
+std::string format(const std::string& fmt, Args&& ... args) {
+    // TODO
+    return fmt;
+}
+
+/**
+ * Print a formatted version of string fmt to output stream os.
+ *
+ * @tparam Args
+ * @param os
+ * @param fmt
+ * @param args
+ */
+template <typename... Args>
+inline void formatP(std::ostream& os, const std::string& fmt, Args&& ... args) {
+    os << format(fmt, std::forward<Args>(args)...);
+}
+
+template <typename... Args>
+inline void formatP(const std::string& fmt, Args&& ... args) {
+    formatP(std::cout, fmt, std::forward<Args>(args)...);
 }
 
 }

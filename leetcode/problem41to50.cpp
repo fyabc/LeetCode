@@ -5,6 +5,7 @@
 #include "support/IO.h"
 
 #include <algorithm>
+#include <numeric>
 #include <vector>
 
 using namespace std;
@@ -156,7 +157,7 @@ class Solution43 {
 
 public:
     static string multiply(const string& num1, const string& num2) {
-        BigInteger a {num1}, b {num2}, c;
+        BigInteger a{num1}, b{num2}, c;
 
         c.digits.resize(a.digits.size() + b.digits.size());
 
@@ -173,20 +174,47 @@ public:
 
 private:
     inline static int ch2i(char ch) { return ch - '0'; }
+
     inline static char i2ch(int i) { return static_cast<char>('0' + i); }
 };
 
 class Solution44 {
 public:
+    /**
+     * DP.
+     *
+     *  dp[i, j] indicates if s[:i] and p[:j] match.
+     *  dp[i+1, j+1] == true iff:
+     *      (dp[i, j] == true and match(s[i], p[j])) or
+     *      (p[j] == '*' and dp[i, j+1] == true) or
+     *      (p[j] == '*' and dp[i+1, j] == true)
+     *
+     * @param s
+     * @param p
+     * @return
+     */
     static bool isMatch(const string& s, const string& p) {
         auto M = s.size(), N = p.size();
-        // dp[i, j] indicates if s[:i] and p[:j] match.
         bool* dp = new bool[(M + 1) * (N + 1)];
         fill(dp, dp + ((M + 1) * (N + 1)), false);
         dp[0] = true;
 
-        for (int i = -1; i < M; ++i) {
+        for (int j = 0; j < N; ++j) {
+            if (p[j] != '*')
+                break;
+            dp[pos(0, j + 1, N)] = true;
+        }
+
+        for (int i = 0; i < M; ++i) {
             for (int j = 0; j < N; ++j) {
+                char si = s[i], pj = p[j];
+
+                if (pj == '*')
+                    dp[pos(i + 1, j + 1, N)] = dp[pos(i, j, N)] || dp[pos(i, j + 1, N)] || dp[pos(i + 1, j, N)];
+                else {
+                    bool firstMatch = (si == pj || pj == '?');
+                    dp[pos(i + 1, j + 1, N)] = dp[pos(i, j, N)] && firstMatch;
+                }
             }
         }
 
@@ -199,5 +227,131 @@ public:
 private:
     inline static string::size_type pos(int m, int n, string::size_type N) {
         return m * (N + 1) + n;
+    }
+};
+
+class Solution45 {
+public:
+    /**
+     * Scan from left to right to calculate the jump sources of each position.
+     * `jumpSources[i]' means the most left position that can jump to `i'.
+     *
+     * Then jump from the last index back to the first to count steps.
+     *
+     * @param nums
+     * @return
+     */
+    static int jump(vector<int>& nums) {
+        int N = static_cast<int>(nums.size());
+
+        vector<int> jumpSources(N);
+        iota(jumpSources.begin(), jumpSources.end(), 0);
+
+        int currentRightMost = 0;
+        for (int i = 0; i < N; ++i) {
+            int newRight = min(nums[i] + i, N - 1);
+            if (newRight > currentRightMost) {
+                for (int j = currentRightMost + 1; j <= newRight; ++j)
+                    jumpSources[j] = i;
+                currentRightMost = newRight;
+                if (currentRightMost >= N - 1)
+                    break;
+            }
+        }
+
+        int pos = N - 1, count = 0;
+        while (pos > 0) {
+            pos = jumpSources[pos];
+            ++count;
+        }
+        return count;
+    }
+};
+
+class Solution46 {
+public:
+    /**
+     * See solution 31.
+     *
+     * @param nums
+     * @return
+     */
+    static vector<vector<int>> permute(vector<int>& nums) {
+        if (nums.empty())
+            return {{}};
+        if (nums.size() == 1)
+            return {nums};
+
+        sort(nums.begin(), nums.end());
+        int N = static_cast<int>(nums.size());
+
+        vector<vector<int>> result;
+
+        for (;;) {
+            result.push_back(nums);
+
+            int i = N - 2;
+
+            for (; i >= 0; --i) {
+                if (nums[i] < nums[i + 1])
+                    break;
+            }
+
+            if (i >= 0) {
+                int x = nums[i];
+                int j = N - 1;
+                for (; j > i; --j) {
+                    if (nums[j] > nums[i])
+                        break;
+                }
+                swap(nums[i], nums[j]);
+            } else
+                break;
+
+            reverse(nums.begin() + i + 1, nums.end());
+        }
+
+        return result;
+    }
+};
+
+class Solution47 {
+public:
+    inline static vector<vector<int>> permuteUnique(vector<int>& nums) {
+        return Solution46::permute(nums);
+    }
+};
+
+class Solution48 {
+public:
+    static void rotate(vector<vector<int>>& matrix) {
+        auto N = matrix.size(), H = N / 2;
+        for (int i = 0; i < H; ++i) {
+            for (int j = 0; j < H; ++j) {
+                permute4(matrix[i][j], matrix[j][N - 1 - i],
+                         matrix[N - 1 - i][N - 1 - j], matrix[N - 1 - j][i]);
+            }
+        }
+        if (N % 2 != 0) {
+            for (int i = 0; i < H; ++i) {
+                permute4(matrix[i][H], matrix[H][N - 1 - i], matrix[N - 1 - i][H], matrix[H][i]);
+            }
+        }
+    }
+
+private:
+    inline static void permute4(int& a, int& b, int& c, int& d) {
+        int t = d;
+        d = c;
+        c = b;
+        b = a;
+        a = t;
+    }
+};
+
+class Solution49 {
+public:
+    static vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        return {};
     }
 };

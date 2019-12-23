@@ -54,4 +54,61 @@ TEST(Problem44Test, Basic) {
     EXPECT_FALSE(s.isMatch("cb", "?a"));
     EXPECT_TRUE(s.isMatch("acdeb", "*a*b"));
     EXPECT_FALSE(s.isMatch("acdcb", "a*c?b"));
+    EXPECT_TRUE(s.isMatch("a", "a*"));
+}
+
+TEST(Problem45Test, Basic) {
+    Solution45 s;
+
+    vector<int> v1 = {2, 3, 1, 1, 4};
+    EXPECT_EQ(s.jump(v1), 2);
+
+    vector<int> v2 = {2, 3, 0, 1, 4};
+    EXPECT_EQ(s.jump(v2), 2);
+}
+
+TEST(Problem46Test, Basic) {
+    Solution46 s;
+
+    vector<int> v1 = {1, 2, 3};
+    vector<vector<int>> r1 = {{1, 2, 3}, {1, 3, 2}, {2, 1, 3}, {2, 3, 1}, {3, 1, 2}, {3, 2, 1}};
+    EXPECT_EQ(s.permute(v1), r1);
+}
+
+TEST(Problem47Test, Basic) {
+    Solution47 s;
+
+    vector<int> v1 = {1, 1, 2};
+    vector<vector<int>> r1 = {{1, 1, 2}, {1, 2, 1}, {2, 1, 1}};
+    EXPECT_EQ(s.permuteUnique(v1), r1);
+}
+
+TEST(Problem48Test, Basic) {
+    vector<vector<int>> v1 = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+    vector<vector<int>> r1 = {{7, 4, 1}, {8, 5, 2}, {9, 6, 3}};
+    Solution48::rotate(v1);
+    EXPECT_EQ(v1, r1);
+
+    vector<vector<int>> v2 = {{5, 1, 9, 11}, {2, 4, 8, 10}, {13, 3, 6, 7}, {15, 14, 12, 16}};
+    vector<vector<int>> r2 = {{15, 13, 2, 5}, {14, 3, 4, 1}, {12, 6, 8, 9}, {16, 7, 10, 11}};
+    Solution48::rotate(v2);
+    EXPECT_EQ(v2, r2);
+
+    vector<vector<int>> v3 = {};
+    vector<vector<int>> r3 = {};
+    Solution48::rotate(v3);
+    EXPECT_EQ(v3, r3);
+
+    vector<vector<int>> v4 = {{1}};
+    vector<vector<int>> r4 = {{1}};
+    Solution48::rotate(v4);
+    EXPECT_EQ(v4, r4);
+}
+
+TEST(Problem49Test, Basic) {
+    vector<string> v1 = {"eat", "tea", "tan", "ate", "nat", "bat"};
+    set<vector<string>> r1 = {{"ate", "eat", "tea"}, {"nat", "tan"}, {"bat"}};
+
+    auto out1 = Solution49::groupAnagrams(v1);
+    EXPECT_EQ(set<vector<string>>(out1.begin(), out1.end()), r1);
 }
