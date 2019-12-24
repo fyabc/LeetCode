@@ -157,7 +157,7 @@ TEST(Problem54Test, Basic) {
         {4, 5, 6},
         {7, 8, 9},
     };
-    vector<int> r1 = {1 ,2, 3, 9, 6, 8, 7, 4, 5};
+    vector<int> r1 = {1 ,2, 3, 6, 9, 8, 7, 4, 5};
     EXPECT_EQ(s.spiralOrder(v1), r1);
 
     vector<vector<int>> v2 = {
@@ -167,4 +167,93 @@ TEST(Problem54Test, Basic) {
     };
     vector<int> r2 = {1 ,2, 3, 4, 8, 12, 11, 10, 9, 5, 6, 7};
     EXPECT_EQ(s.spiralOrder(v2), r2);
+}
+
+TEST(Problem55Test, Basic) {
+    Solution55 s;
+
+    vector<int> v1 = {2, 3, 1, 1, 4};
+    EXPECT_TRUE(s.canJump(v1));
+
+    vector<int> v2 = {3, 2, 1, 0, 4};
+    EXPECT_FALSE(s.canJump(v2));
+
+    vector<int> v3 = {0, 2, 3};
+    EXPECT_FALSE(s.canJump(v3));
+}
+
+TEST(Problem56Test, Basic) {
+    Solution56 s;
+
+    vector<vector<int>> v1 = {{1, 3}, {2, 6}, {8, 10}, {15, 18}};
+    vector<vector<int>> r1 = {{1, 6}, {8, 10}, {15, 18}};
+    EXPECT_EQ(s.merge(v1), r1);
+
+    vector<vector<int>> v2 = {{1, 4}, {4, 5}};
+    vector<vector<int>> r2 = {{1, 5}};
+    EXPECT_EQ(s.merge(v2), r2);
+}
+
+TEST(Problem57Test, Basic) {
+    Solution57 s;
+
+    vector<vector<int>> v1 = {{1, 3}, {6, 9}};
+    vector<int> i1 = {2, 5};
+    vector<vector<int>> r1 = {{1, 5}, {6, 9}};
+    EXPECT_EQ(s.insert(v1, i1), r1);
+
+    vector<vector<int>> v2 = {{1, 2}, {3, 5}, {6, 7}, {8, 10}, {12, 16}};
+    vector<int> i2 = {4, 8};
+    vector<vector<int>> r2 = {{1, 2}, {3, 10}, {12, 16}};
+    EXPECT_EQ(s.insert(v2, i2), r2);
+
+    vector<vector<int>> v3 = {};
+    vector<int> i3 = {4, 8};
+    vector<vector<int>> r3 = {{4, 8}};
+    EXPECT_EQ(s.insert(v3, i3), r3);
+
+    vector<vector<int>> v4 = {{1, 3}, {6, 9}};
+    vector<int> i4 = {8, 10};
+    vector<vector<int>> r4 = {{1, 3}, {6, 10}};
+    EXPECT_EQ(s.insert(v4, i4), r4);
+
+    vector<vector<int>> v5 = {{1, 3}, {6, 9}};
+    vector<int> i5 = {4, 5};
+    vector<vector<int>> r5 = {{1, 3}, {4, 5}, {6, 9}};
+    EXPECT_EQ(s.insert(v5, i5), r5);
+
+    vector<vector<int>> v6 = {{1, 5}};
+    vector<int> i6 = {6, 8};
+    vector<vector<int>> r6 = {{1, 5}, {6, 8}};
+    EXPECT_EQ(s.insert(v6, i6), r6);
+
+    vector<vector<int>> v7 = {{1, 5}};
+    vector<int> i7 = {0, 0};
+    vector<vector<int>> r7 = {{0, 0}, {1, 5}};
+    EXPECT_EQ(s.insert(v7, i7), r7);
+}
+
+TEST(Problem58Test, Basic) {
+    EXPECT_EQ(Solution58::lengthOfLastWord("Hello World"), 5);
+}
+
+TEST(Problem59Test, Basic) {
+    Solution59 s;
+
+    vector<vector<int>> r1 = {{1, 2, 3}, {8, 9, 4}, {7, 6, 5}};
+    EXPECT_EQ(s.generateMatrix(3), r1);
+
+    vector<vector<int>> r2 = {{1}};
+    EXPECT_EQ(s.generateMatrix(1), r2);
+
+    vector<vector<int>> r3 = {{1, 2}, {4, 3}};
+    EXPECT_EQ(s.generateMatrix(2), r3);
+}
+
+TEST(Problem60Test, Basic) {
+    EXPECT_EQ(Solution60::getPermutation(3, 3), "213");
+    EXPECT_EQ(Solution60::getPermutation(4, 9), "2314");
+    EXPECT_EQ(Solution60::getPermutation(4, 24), "4321");
+    EXPECT_EQ(Solution60::getPermutation(1, 1), "1");
+    EXPECT_EQ(Solution60::getPermutation(4, 1), "1234");
 }
