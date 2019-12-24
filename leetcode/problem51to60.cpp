@@ -3,6 +3,7 @@
 //
 
 #include <algorithm>
+#include <numeric>
 
 using namespace std;
 
@@ -95,7 +96,101 @@ private:
 
 class Solution53 {
 public:
+
+#define S53_USE_DP
+
+#ifdef S53_USE_DP
+    /**
+     * DP.
+     *
+     *  maxSumEndsWithI = max(sum(nums[x..i]) for x in 0..i).
+     *
+     * State transition equation:
+     *  maxSumEndsWith[i] = {
+     *      nums[i], if maxSumEndsWith[i - 1] <= 0;
+     *      nums[i] + maxSumEndsWith[i - 1], else.
+     *  }
+     *
+     * @param nums
+     * @return
+     */
     static int maxSubArray(vector<int>& nums) {
-        return 0;
+        if (nums.empty())
+            return numeric_limits<int>::min();
+
+        auto N = nums.size();
+        int result = nums[0], maxSumEndsWithI = nums[0];
+
+        for (int i = 1; i < N; ++i) {
+            if (maxSumEndsWithI <= 0)
+                maxSumEndsWithI = nums[i];
+            else
+                maxSumEndsWithI += nums[i];
+            if (maxSumEndsWithI > result)
+                result = maxSumEndsWithI;
+        }
+
+        return result;
+    }
+#else
+    /**
+     * Divide and conquer.
+     *
+     * maxSum(lo, hi) = max(maxSum(lo, mid), maxSum(mid, hi), maxSumLeftEndsWith(mid) + maxSumRightStartsWith(mid+1))
+     *
+     * @param nums
+     * @return
+     */
+    static int maxSubArray(vector<int>& nums) {
+        if (nums.empty())
+            return numeric_limits<int>::min();
+
+        auto N = nums.size();
+        return dfs(nums, 0, static_cast<int>(N) - 1);
+    }
+
+private:
+    static int dfs(vector<int>& nums, int lo, int hi) {
+        if (lo > hi)
+            return 0;
+        if (lo == hi)
+            return nums[lo];
+        int mid = (lo + hi) / 2;
+
+        int leftMaxSum = nums[mid], leftSum = 0;
+        for (int i = mid; i >= lo; --i) {
+            leftSum += nums[i];
+            if (leftSum > leftMaxSum)
+                leftMaxSum = leftSum;
+        }
+
+        int rightMaxSum = nums[mid + 1], rightSum = 0;
+        for (int j = mid + 1; j <= hi; ++j) {
+            rightSum += nums[j];
+            if (rightSum > rightMaxSum)
+                rightMaxSum = rightSum;
+        }
+
+        int acrossMaxSum = leftMaxSum + rightMaxSum;
+
+        return max(max(dfs(nums, lo, mid), dfs(nums, mid + 1, hi)), acrossMaxSum);
+    }
+
+#endif
+};
+
+class Solution54 {
+public:
+    static vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        if (matrix.empty())
+            return {};
+        if (matrix[0].empty())
+            return {};
+
+        auto M = matrix.size(), N = matrix[0].size();
+
+        vector<int> result;
+
+        return result;
     }
 };

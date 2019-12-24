@@ -148,3 +148,23 @@ TEST(Problem53Test, Basic) {
     vector<int> v1 = {-2, 1, -3, 4, -1, 2, 1, -5, 4};
     EXPECT_EQ(s.maxSubArray(v1), 6);
 }
+
+TEST(Problem54Test, Basic) {
+    Solution54 s;
+
+    vector<vector<int>> v1 = {
+        {1, 2, 3},
+        {4, 5, 6},
+        {7, 8, 9},
+    };
+    vector<int> r1 = {1 ,2, 3, 9, 6, 8, 7, 4, 5};
+    EXPECT_EQ(s.spiralOrder(v1), r1);
+
+    vector<vector<int>> v2 = {
+        {1, 2, 3, 4},
+        {5, 6, 7, 8},
+        {9, 10, 11, 12},
+    };
+    vector<int> r2 = {1 ,2, 3, 4, 8, 12, 11, 10, 9, 5, 6, 7};
+    EXPECT_EQ(s.spiralOrder(v2), r2);
+}

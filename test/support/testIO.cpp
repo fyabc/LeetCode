@@ -85,7 +85,7 @@ TEST(TestPrint, Container) {
         "list[1, 2, 4]");
     EXPECT_EQ(
         CAPTURE_STDOUT(print(forward_list<int> {1, 2, 4})),
-        "forward_list[1, 2, 4]");
+        "flist[1, 2, 4]");
     EXPECT_EQ(
         CAPTURE_STDOUT(print(map<string, int>{{"hello", 1}, {"world", 2}})),
         "{hello: 1, world: 2}");

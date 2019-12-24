@@ -55,6 +55,54 @@ inline void printlnV(Arg1&& arg1, Arg2&& arg2, Args&& ... args) {
     printlnV(std::forward<Arg2>(arg2), std::forward<Args>(args)...);
 }
 
+namespace detail {
+
+template <typename ContainerT>
+void _printContainer(const ContainerT& container, std::ostream& os,
+                     const std::string& sep, const std::string& lp, const std::string& rp,
+                     bool printTypename) {
+    if (printTypename)
+        os << getTypename<ContainerT>();
+    os << lp;
+    std::size_t count = 0;
+    for (auto it = std::begin(container); it != std::end(container); ++it, ++count) {
+        if (count > 0) {
+            os << sep;
+        }
+        print(*it, os);
+    }
+    os << rp;
+}
+
+template <typename SetT>
+inline void _printSet(const SetT& container, std::ostream& os,
+                      const std::string& sep, const std::string& lp, const std::string& rp) {
+    if (container.empty()) {
+        os << "set()";
+        return;
+    }
+    _printContainer(container, os, sep, lp, rp, false);
+}
+
+template <typename MappingT>
+void _printMap(const MappingT& container, std::ostream& os,
+               const std::string& sep, const std::string kvSep,
+               const std::string& lp, const std::string& rp) {
+    os << lp;
+    std::size_t count = 0;
+    for (auto it = container.begin(); it != container.end(); ++it, ++count) {
+        if (count > 0) {
+            os << sep;
+        }
+        print(it->first, os);
+        os << kvSep;
+        print(it->second, os);
+    }
+    os << rp;
+}
+
+}
+
 template <typename T>
 inline void print(const T& container) {
     print(container, std::cout);
@@ -108,57 +156,25 @@ _IO_PRINT_C_STRING(char16_t)
 
 _IO_PRINT_C_STRING(char32_t)
 
+/**
+ * Special case for std::initializer_list<T>.
+ *
+ * @tparam T
+ * @param container
+ * @param os
+ */
 template <typename T>
 inline void print(const std::initializer_list<T>& container, std::ostream& os = std::cout) {
     detail::_printContainer(container, os, ", ", "initlist(", ")", false);
 }
 
-namespace detail {
-
-template <typename ContainerT>
-void _printContainer(const ContainerT& container, std::ostream& os,
-                     const std::string& sep, const std::string& lp, const std::string& rp,
-                     bool printTypename) {
-    if (printTypename)
-        os << getTypename<ContainerT>();
-    os << lp;
-    std::size_t count = 0;
-    for (auto it = std::begin(container); it != std::end(container); ++it, ++count) {
-        if (count > 0) {
-            os << sep;
-        }
-        print(*it, os);
-    }
-    os << rp;
-}
-
-template <typename SetT>
-inline void _printSet(const SetT& container, std::ostream& os,
-                      const std::string& sep, const std::string& lp, const std::string& rp) {
-    if (container.empty()) {
-        os << "set()";
-        return;
-    }
-    _printContainer(container, os, sep, lp, rp, false);
-}
-
-template <typename MappingT>
-void _printMap(const MappingT& container, std::ostream& os,
-               const std::string& sep, const std::string kvSep,
-               const std::string& lp, const std::string& rp) {
-    os << lp;
-    std::size_t count = 0;
-    for (auto it = container.begin(); it != container.end(); ++it, ++count) {
-        if (count > 0) {
-            os << sep;
-        }
-        print(it->first, os);
-        os << kvSep;
-        print(it->second, os);
-    }
-    os << rp;
-}
-
+/**
+ * Special case for nullptr.
+ * Before LWG2221, std::ostream cannot output nullptr.
+ * @param os
+ */
+inline void print(std::nullptr_t, std::ostream& os) {
+    os << "nullptr";
 }
 
 #define _IO_PRINT_SINGLE_CONTAINER(ContainerType, LP, RP)                   \
@@ -171,7 +187,7 @@ _IO_PRINT_SINGLE_CONTAINER(std::vector, "[", "]")
 
 _IO_PRINT_SINGLE_CONTAINER(std::list, "list[", "]")
 
-_IO_PRINT_SINGLE_CONTAINER(std::forward_list, "forward_list[", "]")
+_IO_PRINT_SINGLE_CONTAINER(std::forward_list, "flist[", "]")
 
 #define _IO_PRINT_SET(SetType)                                          \
 template <typename T>                                                   \
