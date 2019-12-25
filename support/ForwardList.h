@@ -55,7 +55,7 @@ struct ListNodeT {
 };
 
 template <typename T>
-std::ostream& operator<<(std::ostream& os, ListNodeT<T>* head) {
+inline std::ostream& operator<<(std::ostream& os, ListNodeT<T>* head) {
     head->print(os);
     return os;
 }

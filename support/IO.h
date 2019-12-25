@@ -177,17 +177,17 @@ inline void print(std::nullptr_t, std::ostream& os) {
     os << "nullptr";
 }
 
-#define _IO_PRINT_SINGLE_CONTAINER(ContainerType, LP, RP)                   \
+#define _IO_PRINT_SINGLE_CONTAINER(ContainerType, SEP, LP, RP)              \
 template <typename T>                                                       \
 inline void print(const ContainerType <T>& container, std::ostream& os) {   \
-    detail::_printContainer(container, os, ", ", (LP), (RP), false);        \
+    detail::_printContainer(container, os, (SEP), (LP), (RP), false);       \
 }
 
-_IO_PRINT_SINGLE_CONTAINER(std::vector, "[", "]")
+_IO_PRINT_SINGLE_CONTAINER(std::vector, ", ", "[", "]")
 
-_IO_PRINT_SINGLE_CONTAINER(std::list, "list[", "]")
+_IO_PRINT_SINGLE_CONTAINER(std::list, " <-> ", "[", "]")
 
-_IO_PRINT_SINGLE_CONTAINER(std::forward_list, "flist[", "]")
+_IO_PRINT_SINGLE_CONTAINER(std::forward_list, " -> ", "[", "]")
 
 #define _IO_PRINT_SET(SetType)                                          \
 template <typename T>                                                   \
