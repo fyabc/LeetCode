@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <bitset>
+#include <istream>
 #include <regex>
 
 using namespace std;
@@ -192,6 +193,135 @@ private:
 class Solution68 {
 public:
     static vector<string> fullJustify(vector<string>& words, int maxWidth) {
-        return {};
+        auto split = groupWords(words, maxWidth);
+
+        vector<string> result {};
+
+        int start = 0;
+        for (const auto& splitEnd : split) {
+            // Get subwords
+            vector<string> subwords(words.begin() + start, words.begin() + splitEnd);
+
+            if (splitEnd == words.size()) {
+                result.push_back(writeLastLine(subwords, maxWidth));
+            } else {
+                result.push_back(writeLine(subwords, maxWidth));
+            }
+            start = splitEnd;
+        }
+
+        return result;
+    }
+
+    static vector<int> groupWords(const vector<string>& words, int maxWidth) {
+        int start = 0, totalLen = 0;
+        vector<int> split {};
+
+        int N = static_cast<int>(words.size());
+        for (int end = 0; end < N; ++end) {
+            int wordLen = static_cast<int>(words[end].size());
+
+            totalLen += wordLen;
+            if (end > start) {
+                ++totalLen;
+            }
+
+            if (totalLen > maxWidth) {
+                split.push_back(end);
+                totalLen = wordLen;
+                start = end;
+            }
+        }
+
+        split.push_back(N);
+
+        return split;
+    }
+
+    static string writeLine(const vector<string>& words, int maxWidth) {
+        string result(maxWidth, ' ');
+
+        if (words.size() == 1) {
+            copy(words[0].begin(), words[0].end(), result.begin());
+            return result;
+        }
+
+        int remainSpaces = maxWidth;
+        for (const auto& word : words) {
+            remainSpaces -= static_cast<int>(word.size());
+        }
+        auto rightSpace = remainSpaces / (words.size() - 1);
+        vector<int> spaces(words.size() - 1, rightSpace);
+        for (int i = 0; i < remainSpaces % spaces.size(); ++i) {
+            ++spaces[i];
+        }
+
+        auto copyIter = result.begin();
+
+        for (int i = 0; i < words.size(); ++i) {
+            copy(words[i].begin(), words[i].end(), copyIter);
+
+            if (i != words.size() - 1) {
+                copyIter += words[i].size() + spaces[i];
+            }
+        }
+
+        return result;
+    }
+
+    static string writeLastLine(const vector<string>& words, int maxWidth) {
+        string result(maxWidth, ' ');
+
+        auto copyIter = result.begin();
+        for (const auto& word : words) {
+            copy(word.begin(), word.end(), copyIter);
+            copyIter += word.size() + 1;
+        }
+
+        return result;
+    }
+};
+
+
+class Solution69 {
+public:
+    static int mySqrt(int x) {
+        auto xLL = static_cast<int64_t>(x);
+        int64_t lo = 0, hi = 1U << 16U;
+
+        while (hi - lo > 1) {
+            auto mid = (lo + hi) / 2, midSqr = mid * mid;
+            if (xLL == midSqr) {
+                return static_cast<int>(mid);
+            } else if (xLL > midSqr) {
+                lo = mid;
+            } else {
+                hi = mid - 1;
+            }
+        }
+
+        if (hi * hi <= xLL) {
+            return static_cast<int>(hi);
+        } else {
+            return static_cast<int>(lo);
+        }
+    }
+};
+
+
+class Solution70 {
+    /// f[n] = f[n-1] + f[n-2]
+    /// f[1] = 1, f[2] = 2
+    static constexpr int Table[] = {
+        0,
+        1, 2, 3, 5, 8, 13, 21, 34, 55, 89,
+        144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946,
+        17711, 28657, 46368, 75025, 121393, 196418, 317811, 514229, 832040, 1346269,
+        2178309, 3524578, 5702887, 9227465, 14930352, 24157817, 39088169, 63245986, 102334155, 165580141,
+        267914296, 433494437, 701408733, 1134903170, 1836311903,
+    };
+public:
+    static int climbStairs(int n) {
+        return Table[n];
     }
 };

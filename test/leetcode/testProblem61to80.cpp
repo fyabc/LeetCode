@@ -124,3 +124,40 @@ TEST(Problem68Test, Basic) {
                          "a  computer.  Art is", "everything  else  we", "do                  "};
     EXPECT_EQ(s.fullJustify(v3, 20), r3);
 }
+
+TEST(Problem69Test, Basic) {
+    Solution69 s;
+
+    EXPECT_EQ(s.mySqrt(4), 2);
+    EXPECT_EQ(s.mySqrt(8), 2);
+    EXPECT_EQ(s.mySqrt(0), 0);
+    EXPECT_EQ(s.mySqrt(1), 1);
+}
+
+TEST(Problem70Test, Basic) {
+    Solution70 s;
+
+    EXPECT_EQ(s.climbStairs(2), 2);
+    EXPECT_EQ(s.climbStairs(3), 3);
+}
+
+TEST(Problem71Test, Basic) {
+    Solution71 s;
+
+    EXPECT_EQ(s.simplifyPath("/home/"), "/home");
+    EXPECT_EQ(s.simplifyPath("/../"), "/");
+    EXPECT_EQ(s.simplifyPath("/home//foo/"), "/home/foo");
+    EXPECT_EQ(s.simplifyPath("/a/./b/../../c/"), "/c");
+}
+
+TEST(Problem72Test, Basic) {
+    Solution72 s;
+
+    EXPECT_EQ(s.minDistance("horse", "ros"), 3);
+    EXPECT_EQ(s.minDistance("intention", "execution"), 5);
+    EXPECT_EQ(s.minDistance("b", ""), 1);
+}
+
+TEST(Problem73Test, Basic) {
+    Solution73 s;
+}

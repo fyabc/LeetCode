@@ -1,0 +1,39 @@
+class Solution1592 {
+public:
+    static string reorderSpaces(const string& text) {
+        istringstream is(text);
+        string s;
+        int totalSize = static_cast<int>(text.size());
+        int spaceSize = totalSize;
+        vector<string> words;
+
+        while (is >> s) {
+            words.push_back(s);
+            spaceSize -= static_cast<int>(s.size());
+        }
+
+        int nSpaces = static_cast<int>(words.size()) - 1;
+
+        int perSpaceSize = nSpaces == 0 ? 0 : spaceSize / nSpaces;
+
+        string result(totalSize, ' ');
+        auto copyIter = result.begin();
+        for (const auto& word : words) {
+            copy(word.begin(), word.end(), copyIter);
+            copyIter += word.size() + perSpaceSize;
+        }
+
+        return result;
+    }
+};
+
+
+TEST(Problem1592Test, Basic) {
+    Solution1592 s;
+
+    EXPECT_EQ(s.reorderSpaces("  this   is  a sentence "), "this   is   a   sentence");
+    EXPECT_EQ(s.reorderSpaces(" practice   makes   perfect"), "practice   makes   perfect ");
+    EXPECT_EQ(s.reorderSpaces("hello   world"), "hello   world");
+    EXPECT_EQ(s.reorderSpaces("  walks  udp package   into  bar a"), "walks  udp  package  into  bar  a ");
+    EXPECT_EQ(s.reorderSpaces("a"), "a");
+}
