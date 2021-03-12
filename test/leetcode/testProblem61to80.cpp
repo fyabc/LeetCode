@@ -159,5 +159,53 @@ TEST(Problem72Test, Basic) {
 }
 
 TEST(Problem73Test, Basic) {
-    Solution73 s;
+    using S73 = Solution73;
+
+    vector<vector<int>> m1 = {{1, 1, 1}, {1, 0, 1}, {1, 1, 1}};
+    vector<vector<int>> m1a = {{1, 0, 1}, {0, 0, 0}, {1, 0, 1}};
+
+    S73::setZeroes(m1);
+    EXPECT_EQ(m1, m1a);
+
+    vector<vector<int>> m2 = {{0, 1, 2, 0}, {3, 4, 5, 2}, {1, 3, 1, 5}};
+    vector<vector<int>> m2a = {{0, 0, 0, 0}, {0, 4, 5, 0}, {0, 3, 1, 0}};
+}
+
+TEST(Problem74Test, Basic) {
+    vector<vector<int>> m1 = {{1, 3, 5, 7}, {10, 11, 16, 20}, {23, 30, 34, 60}};
+    EXPECT_EQ(Solution74::searchMatrix(m1, 3), true);
+
+    vector<vector<int>> m2 = {{1, 3, 5, 7}, {10, 11, 16, 20}, {23, 30, 34, 60}};
+    EXPECT_EQ(Solution74::searchMatrix(m2, 13), false);
+}
+
+TEST(Problem75Test, Basic) {
+    vector<int> v1 = {2, 0, 2, 1, 1, 0};
+    vector<int> r1 = {0, 0, 1, 1, 2, 2};
+
+    Solution75::sortColors(v1);
+    EXPECT_EQ(v1, r1);
+
+    vector<int> v2 = {2, 0, 1};
+    vector<int> r2 = {0, 1, 2};
+
+    Solution75::sortColors(v2);
+    EXPECT_EQ(v2, r2);
+
+    vector<int> v3 = {0};
+    vector<int> r3 = {0};
+
+    Solution75::sortColors(v3);
+    EXPECT_EQ(v3, r3);
+
+    vector<int> v4 = {1};
+    vector<int> r4 = {1};
+
+    Solution75::sortColors(v4);
+    EXPECT_EQ(v4, r4);
+}
+
+TEST(Problem76Test, Basic) {
+    EXPECT_EQ(Solution76::minWindow("ADOBECODEBANC", "ABC"), "BANC");
+    EXPECT_EQ(Solution76::minWindow("a", "a"), "a");
 }

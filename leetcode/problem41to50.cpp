@@ -139,7 +139,7 @@ class Solution43 {
             }
         }
 
-        [[nodiscard]] string toString() const {
+        string toString() const {
             string result;
             bool leadingZero = true;
             for (auto it = digits.rbegin(); it != digits.rend(); ++it) {

@@ -64,8 +64,8 @@ struct MyContainer {
 
     MyContainer(std::initializer_list<T> initializerList): v(initializerList) {}
 
-    [[nodiscard]] auto begin() const { return v.begin(); }
-    [[nodiscard]] auto end() const { return v.end(); }
+    auto begin() const { return v.begin(); }
+    auto end() const { return v.end(); }
 };
 
 TEST(TestPrint, Container) {

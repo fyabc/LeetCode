@@ -18,8 +18,22 @@ public:
     }
 
     UFSet(const UFSet& other) = delete;
+    UFSet& operator=(const UFSet& other) = delete;
 
-    ~UFSet() {
+    UFSet(UFSet&& other) noexcept : id_(other.id_), sizes_(other.sizes_), count_(other.count_) {
+        other.id_ = nullptr;
+        other.sizes_ = nullptr;
+    }
+    UFSet& operator=(UFSet&& other) noexcept {
+        id_ = other.id_;
+        sizes_ = other.sizes_;
+        count_ = other.count_;
+        other.id_ = nullptr;
+        other.sizes_ = nullptr;
+        return *this;
+    }
+
+    ~UFSet() noexcept {
         delete[] id_;
         delete[] sizes_;
     }
@@ -44,7 +58,7 @@ public:
         return find(p) == find(q);
     }
 
-    int count() { return count_; }
+    int count() const { return count_; }
 
 private:
     int* id_;

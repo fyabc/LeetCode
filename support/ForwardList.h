@@ -43,7 +43,7 @@ struct ListNodeT {
         os << ptr->val << std::endl;
     }
 
-    [[nodiscard]] std::vector<int> toVector() const {
+    std::vector<int> toVector() const {
         auto ptr = this;
         std::vector<int> result;
         while (ptr != nullptr) {
