@@ -11,5 +11,5 @@ target_link_libraries(Google_Tests_leetcode_run_41to80 gtest gtest_main)
 
 
 add_executable(Google_Tests_leetcode_run_weeklyContest
-               testWeeklyContest.cpp)
+               weeklyContest/testWC221to240.cpp)
 target_link_libraries(Google_Tests_leetcode_run_weeklyContest gtest gtest_main)

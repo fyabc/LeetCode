@@ -217,6 +217,17 @@ _IO_PRINT_MAPPING(std::map)
 
 _IO_PRINT_MAPPING(std::multimap)
 
+template <typename T>
+inline void println(const T& container) {
+    println(container, std::cout);
+}
+
+template <typename T, typename Stream>
+inline void println(const T& container, Stream& stream) {
+    print(container, stream);
+    stream << std::endl;
+}
+
 
 /**
  * Return a formatted version of string fmt.
