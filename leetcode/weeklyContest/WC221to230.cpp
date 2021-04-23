@@ -60,8 +60,7 @@ public:
         }
 
         int result = 0;
-        for (int i = 0; i < matrix.size(); ++i) {
-            auto& row = matrix[i];
+        for (auto& row : matrix) {
             sort(row.begin(), row.end());
 
             auto N = static_cast<int>(row.size());
@@ -160,10 +159,10 @@ public:
 
         if (k <= values.size() / 2) {
             auto nthIter = values.begin() + k - 1;
-            nth_element(values.begin(), nthIter, values.end(), std::greater<int>());
+            nth_element(values.begin(), nthIter, values.end(), greater<>());
             return *nthIter;
         } else {
-            auto nthIter = values.begin() + values.size() - k;
+            auto nthIter = values.begin() + static_cast<decltype(values)::difference_type>(values.size()) - k;
             nth_element(values.begin(), nthIter, values.end());
             return *nthIter;
         }

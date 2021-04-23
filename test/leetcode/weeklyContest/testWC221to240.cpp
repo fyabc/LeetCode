@@ -49,6 +49,18 @@ TEST(WC225Q3_Problem1738Test, Basic) {
     EXPECT_EQ(WC225Q3_Problem1738::kthLargestValue(m4, 4), 0);
 }
 
+TEST(WC231Q1_Problem1784Test, Basic) {
+    EXPECT_EQ(WC231Q1_Problem1784::checkOnesSegment("1001"), false);
+    EXPECT_EQ(WC231Q1_Problem1784::checkOnesSegment("110"), true);
+}
+
+TEST(WC231Q2_Problem1785Test, Basic) {
+    vector v1 {1, -1, 1};
+    vector v2 {1, -10, 9, 1};
+    EXPECT_EQ(WC231Q2_Problem1785::minElements(v1, 3, -4), 2);
+    EXPECT_EQ(WC231Q2_Problem1785::minElements(v2, 100, 0), 1);
+}
+
 TEST(WC237Q1_Problem1832Test, Basic) {
     EXPECT_EQ(WC237Q1_Problem1832::checkIfPangram("thequickbrownfoxjumpsoverthelazydog"), true);
     EXPECT_EQ(WC237Q1_Problem1832::checkIfPangram("leetcode"), false);

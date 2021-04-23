@@ -75,7 +75,7 @@ public:
             }
         }
 
-        auto result = table[_p(len2, len1)];
+        auto result = table[_p(static_cast<int>(len2), static_cast<int>(len1))];
 
         return result;
     }
@@ -210,10 +210,10 @@ public:
 
         int left = 0, right = 0;
 
+        return s.substr(left, right - left);
+
         while (right < s.size()) {
             // TODO
         }
-
-        return s.substr(left, right - left);
     }
 };

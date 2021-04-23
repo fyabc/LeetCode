@@ -10,6 +10,35 @@
 
 using namespace std;
 
+class WC231Q1_Problem1784 {
+public:
+    static bool checkOnesSegment(const string& s) {
+        int startPos = -1, endPos = -1;
+        for (int i = 0; i < s.size(); ++i) {
+            if (startPos == -1 && s[i] == '1') {
+                startPos = i;
+                continue;
+            }
+            if (endPos == -1 && s[i] != '1') {
+                endPos = i;
+                continue;
+            }
+            if (startPos != -1 && endPos != -1 && s[i] == '1') {
+                return false;
+            }
+        }
+        return true;
+    }
+};
+
+class WC231Q2_Problem1785 {
+public:
+    static int minElements(vector<int>& nums, int limit, int goal) {
+        int distance =
+        return 0;
+    }
+};
+
 class WC237Q1_Problem1832 {
 public:
     static bool checkIfPangram(const string& sentence) {
@@ -87,7 +116,7 @@ public:
                 break;
             }
 
-            auto task = std::move(queue.top());
+            auto task = queue.top();
             queue.pop();
 
             order.push_back(task.index);
@@ -106,7 +135,7 @@ class WC237Q4_Problem1835 {
      */
 public:
     static int getXORSum(vector<int>& arr1, vector<int>& arr2) {
-        return accumulate(arr1.begin(), arr1.end(), 0, bit_xor<int>()) &
-            accumulate(arr2.begin(), arr2.end(), 0, bit_xor<int>());
+        return accumulate(arr1.begin(), arr1.end(), 0, bit_xor<>()) &
+            accumulate(arr2.begin(), arr2.end(), 0, bit_xor<>());
     }
 };

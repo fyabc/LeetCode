@@ -6,7 +6,6 @@
 #include "support/IO.h"
 
 #include <algorithm>
-#include <bitset>
 #include <istream>
 #include <regex>
 
@@ -20,7 +19,7 @@ public:
 
         auto p = head;
         int N = 0;
-        ListNode* newTail = nullptr, *tail = nullptr;
+        ListNode* newTail, *tail;
 
         for (; p != nullptr; p = p->next, ++N)
             tail = p;
@@ -129,14 +128,16 @@ public:
 };
 
 class Solution65 {
-    static const regex PatternFloatNumber;
+    static const regex& getPatternFloatNumber() {
+        static const regex PatternFloatNumber {R"(^\s*[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?\s*$)"};
+        return PatternFloatNumber;
+    }
+
 public:
     inline static bool isNumber(const string& s) {
-        return regex_match(s, PatternFloatNumber);
+        return regex_match(s, getPatternFloatNumber());
     }
 };
-
-const regex Solution65::PatternFloatNumber {R"(^\s*[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?\s*$)"};
 
 class Solution66 {
 public:
@@ -251,7 +252,7 @@ public:
             remainSpaces -= static_cast<int>(word.size());
         }
         auto rightSpace = remainSpaces / (words.size() - 1);
-        vector<int> spaces(words.size() - 1, rightSpace);
+        vector<int> spaces(words.size() - 1, static_cast<int>(rightSpace));
         for (int i = 0; i < remainSpaces % spaces.size(); ++i) {
             ++spaces[i];
         }
@@ -262,7 +263,7 @@ public:
             copy(words[i].begin(), words[i].end(), copyIter);
 
             if (i != words.size() - 1) {
-                copyIter += words[i].size() + spaces[i];
+                copyIter += static_cast<decltype(result)::difference_type>(words[i].size()) + spaces[i];
             }
         }
 
@@ -275,7 +276,7 @@ public:
         auto copyIter = result.begin();
         for (const auto& word : words) {
             copy(word.begin(), word.end(), copyIter);
-            copyIter += word.size() + 1;
+            copyIter += static_cast<decltype(result)::difference_type>(word.size()) + 1;
         }
 
         return result;
