@@ -31,30 +31,6 @@ inline std::ostream& operator<<(std::ostream& ostream, const std::pair<T1, T2>& 
     return ostream;
 }
 
-/**
- * Variadic println.
- *
- * @tparam Args
- * @param args
- */
-template <typename... Args>
-inline void printlnV(Args&& ... args);
-
-inline void printlnV() {
-    std::cout << std::endl;
-}
-
-template <typename Arg1>
-inline void printlnV(Arg1&& arg1) {
-    std::cout << arg1 << std::endl;
-}
-
-template <typename Arg1, typename Arg2, typename... Args>
-inline void printlnV(Arg1&& arg1, Arg2&& arg2, Args&& ... args) {
-    std::cout << arg1 << ' ';
-    printlnV(std::forward<Arg2>(arg2), std::forward<Args>(args)...);
-}
-
 namespace detail {
 
 template <typename ContainerT>
@@ -227,6 +203,60 @@ inline void println(const T& container, Stream& stream) {
     print(container, stream);
     stream << std::endl;
 }
+
+
+/**
+ * Variadic println.
+ *
+ * @tparam Args
+ * @param args
+ */
+template <typename... Args>
+inline void printlnV(Args&& ... args);
+
+inline void printlnV() {
+    std::cout << std::endl;
+}
+
+template <typename Arg1>
+inline void printlnV(Arg1&& arg1) {
+    println(std::forward<Arg1>(arg1));
+}
+
+template <typename Arg1, typename Arg2, typename... Args>
+inline void printlnV(Arg1&& arg1, Arg2&& arg2, Args&& ... args) {
+    print(std::forward<Arg1>(arg1));
+    std::cout << ' ';
+    printlnV(std::forward<Arg2>(arg2), std::forward<Args>(args)...);
+}
+
+namespace detail {
+
+template <typename... Args>
+inline constexpr int numArgs(Args&&... args) {
+    return sizeof...(args);
+}
+
+}
+
+#define _LEETCODE_ARG15(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, ...) a15
+#define _LEETCODE_COUNT_ARGS(...) _LEETCODE_ARG15(dummy, ##__VA_ARGS__, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0)
+
+#define LEETCODE_PRINT_VARS_1(a1) ::leetcode::printlnV(#a1"=", (a1))
+#define LEETCODE_PRINT_VARS_2(a1, a2) ::leetcode::printlnV(#a1"=", (a1), #a2"=", (a2))
+#define LEETCODE_PRINT_VARS_3(a1, a2, a3) ::leetcode::printlnV(#a1"=", (a1), #a2"=", (a2), #a3"=", (a3))
+#define LEETCODE_PRINT_VARS_4(a1, a2, a3, a4) ::leetcode::printlnV(#a1"=", (a1), #a2"=", (a2), #a3"=", (a3), #a4"=", (a4))
+#define LEETCODE_PRINT_VARS_5(a1, a2, a3, a4, a5) ::leetcode::printlnV(#a1"=", (a1), #a2"=", (a2), #a3"=", (a3), #a4"=", (a4), #a5"=", (a5))
+#define LEETCODE_PRINT_VARS_6(a1, a2, a3, a4, a5, a6) ::leetcode::printlnV(#a1"=", (a1), #a2"=", (a2), #a3"=", (a3), #a4"=", (a4), #a5"=", (a5), #a6"=", (a6))
+#define LEETCODE_PRINT_VARS_7(a1, a2, a3, a4, a5, a6, a7) ::leetcode::printlnV(#a1"=", (a1), #a2"=", (a2), #a3"=", (a3), #a4"=", (a4), #a5"=", (a5), #a6"=", (a6), #a7"=", (a7))
+#define LEETCODE_PRINT_VARS_8(a1, a2, a3, a4, a5, a6, a7, a8) ::leetcode::printlnV(#a1"=", (a1), #a2"=", (a2), #a3"=", (a3), #a4"=", (a4), #a5"=", (a5), #a6"=", (a6), #a7"=", (a7), #a8"=", (a8))
+#define LEETCODE_PRINT_VARS_9(a1, a2, a3, a4, a5, a6, a7, a8, a9) ::leetcode::printlnV(#a1"=", (a1), #a2"=", (a2), #a3"=", (a3), #a4"=", (a4), #a5"=", (a5), #a6"=", (a6), #a7"=", (a7), #a8"=", (a8), #a9"=", (a9))
+#define LEETCODE_PRINT_VARS_10(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10) ::leetcode::printlnV(#a1"=", (a1), #a2"=", (a2), #a3"=", (a3), #a4"=", (a4), #a5"=", (a5), #a6"=", (a6), #a7"=", (a7), #a8"=", (a8), #a9"=", (a9), #a10"=", (a10))
+
+// TODO: Cannot print correctly, need more fix.
+#define _LEETCODE_CONCAT(a, b) a ## b
+#define _LEETCODE_CONCAT2(a, b) _LEETCODE_CONCAT(a, b)
+#define LEETCODE_PRINT_VARS(...) _LEETCODE_CONCAT2(LEETCODE_PRINT_VARS_, _LEETCODE_COUNT_ARGS(__VA_ARGS__)) (##__VA_ARGS__)
 
 
 /**

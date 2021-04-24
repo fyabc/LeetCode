@@ -65,6 +65,8 @@ private:
     using YesType = char[1];
     using NoType = char[2];
 
+#pragma warning(push)
+#pragma warning(disable : 4068)
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "NotImplementedFunctions"
 
@@ -75,6 +77,7 @@ private:
     static NoType& test(...);
 
 #pragma clang diagnostic pop
+#pragma warning(pop)
 
 public:
     enum {
