@@ -32,6 +32,30 @@ inline std::ostream& operator<<(std::ostream& ostream, const std::pair<T1, T2>& 
 }
 
 namespace detail {
+template <typename TupleType, std::size_t... Sizes>
+inline void printTupleImpl(std::ostream& ostream, const TupleType& tuple, std::index_sequence<Sizes...>) {
+    (..., (ostream << (Sizes == 0? "" : ", ") << std::get<Sizes>(tuple)));
+}
+
+}
+
+/**
+ * Print tuple.
+ * Implementation from <https://stackoverflow.com/a/41171552>.
+ * @tparam Ts
+ * @param ostream
+ * @param tuple
+ * @return
+ */
+template <typename... Ts>
+inline std::ostream& operator<<(std::ostream& ostream, const std::tuple<Ts...>& tuple) {
+    ostream << "tuple(";
+    detail::printTupleImpl(ostream, tuple, std::make_index_sequence<sizeof...(Ts)>());
+    ostream << ")";
+    return ostream;
+}
+
+namespace detail {
 
 template <typename ContainerT>
 void _printContainer(const ContainerT& container, std::ostream& os,
@@ -62,7 +86,7 @@ inline void _printSet(const SetT& container, std::ostream& os,
 
 template <typename MappingT>
 void _printMap(const MappingT& container, std::ostream& os,
-               const std::string& sep, const std::string kvSep,
+               const std::string& sep, const std::string& kvSep,
                const std::string& lp, const std::string& rp) {
     os << lp;
     std::size_t count = 0;
@@ -113,7 +137,7 @@ inline void print(const std::basic_string<T>& string, std::ostream& os) {
  * @param string
  * @param os
  */
-#define _IO_PRINT_C_STRING(CharType)                                \
+#define LEETCODE_IMPL_IO_PRINT_C_STRING(CharType)                                \
 template <std::size_t N>                                            \
 inline void print(const CharType string[N], std::ostream& os) {     \
     os << string;                                                   \
@@ -124,13 +148,13 @@ inline void print(const CharType (&string)[N], std::ostream& os) {  \
     os << string;                                                   \
 }
 
-_IO_PRINT_C_STRING(char)
+LEETCODE_IMPL_IO_PRINT_C_STRING(char)
 
-_IO_PRINT_C_STRING(wchar_t)
+LEETCODE_IMPL_IO_PRINT_C_STRING(wchar_t)
 
-_IO_PRINT_C_STRING(char16_t)
+LEETCODE_IMPL_IO_PRINT_C_STRING(char16_t)
 
-_IO_PRINT_C_STRING(char32_t)
+LEETCODE_IMPL_IO_PRINT_C_STRING(char32_t)
 
 /**
  * Special case for std::initializer_list<T>.
@@ -153,45 +177,45 @@ inline void print(std::nullptr_t, std::ostream& os) {
     os << "nullptr";
 }
 
-#define _IO_PRINT_SINGLE_CONTAINER(ContainerType, SEP, LP, RP)              \
+#define LEETCODE_IMPL_IO_PRINT_SINGLE_CONTAINER(ContainerType, SEP, LP, RP)              \
 template <typename T>                                                       \
 inline void print(const ContainerType <T>& container, std::ostream& os) {   \
     detail::_printContainer(container, os, (SEP), (LP), (RP), false);       \
 }
 
-_IO_PRINT_SINGLE_CONTAINER(std::vector, ", ", "[", "]")
+LEETCODE_IMPL_IO_PRINT_SINGLE_CONTAINER(std::vector, ", ", "[", "]")
 
-_IO_PRINT_SINGLE_CONTAINER(std::list, " <-> ", "[", "]")
+LEETCODE_IMPL_IO_PRINT_SINGLE_CONTAINER(std::list, " <-> ", "[", "]")
 
-_IO_PRINT_SINGLE_CONTAINER(std::forward_list, " -> ", "[", "]")
+LEETCODE_IMPL_IO_PRINT_SINGLE_CONTAINER(std::forward_list, " -> ", "[", "]")
 
-#define _IO_PRINT_SET(SetType)                                          \
+#define LEETCODE_IMPL_IO_PRINT_SET(SetType)                                          \
 template <typename T>                                                   \
 inline void print(const SetType <T>& container, std::ostream& os) {     \
     detail::_printSet(container, os, ", ", "{", "}");                   \
 }
 
-_IO_PRINT_SET(std::unordered_set)
+LEETCODE_IMPL_IO_PRINT_SET(std::unordered_set)
 
-_IO_PRINT_SET(std::unordered_multiset)
+LEETCODE_IMPL_IO_PRINT_SET(std::unordered_multiset)
 
-_IO_PRINT_SET(std::set)
+LEETCODE_IMPL_IO_PRINT_SET(std::set)
 
-_IO_PRINT_SET(std::multiset)
+LEETCODE_IMPL_IO_PRINT_SET(std::multiset)
 
-#define _IO_PRINT_MAPPING(MappingType)                                      \
+#define LEETCODE_IMPL_IO_PRINT_MAPPING(MappingType)                                      \
 template <typename K, typename V>                                           \
 inline void print(const MappingType <K, V>& container, std::ostream& os) {  \
     detail::_printMap(container, os, ", ", ": ", "{", "}");                 \
 }
 
-_IO_PRINT_MAPPING(std::unordered_map)
+LEETCODE_IMPL_IO_PRINT_MAPPING(std::unordered_map)
 
-_IO_PRINT_MAPPING(std::unordered_multimap)
+LEETCODE_IMPL_IO_PRINT_MAPPING(std::unordered_multimap)
 
-_IO_PRINT_MAPPING(std::map)
+LEETCODE_IMPL_IO_PRINT_MAPPING(std::map)
 
-_IO_PRINT_MAPPING(std::multimap)
+LEETCODE_IMPL_IO_PRINT_MAPPING(std::multimap)
 
 template <typename T>
 inline void println(const T& container) {
@@ -239,8 +263,8 @@ inline constexpr int numArgs(Args&&... args) {
 
 }
 
-#define _LEETCODE_ARG15(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, ...) a15
-#define _LEETCODE_COUNT_ARGS(...) _LEETCODE_ARG15(dummy, ##__VA_ARGS__, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0)
+#define LEETCODE_IMPL_ARG15(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, ...) a15
+#define LEETCODE_IMPL_COUNT_ARGS(...) LEETCODE_IMPL_ARG15(dummy, ##__VA_ARGS__, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0)
 
 #define LEETCODE_PRINT_VARS_1(a1) ::leetcode::printlnV(#a1"=", (a1))
 #define LEETCODE_PRINT_VARS_2(a1, a2) ::leetcode::printlnV(#a1"=", (a1), #a2"=", (a2))
@@ -254,9 +278,9 @@ inline constexpr int numArgs(Args&&... args) {
 #define LEETCODE_PRINT_VARS_10(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10) ::leetcode::printlnV(#a1"=", (a1), #a2"=", (a2), #a3"=", (a3), #a4"=", (a4), #a5"=", (a5), #a6"=", (a6), #a7"=", (a7), #a8"=", (a8), #a9"=", (a9), #a10"=", (a10))
 
 // TODO: Cannot print correctly, need more fix.
-#define _LEETCODE_CONCAT(a, b) a ## b
-#define _LEETCODE_CONCAT2(a, b) _LEETCODE_CONCAT(a, b)
-#define LEETCODE_PRINT_VARS(...) _LEETCODE_CONCAT2(LEETCODE_PRINT_VARS_, _LEETCODE_COUNT_ARGS(__VA_ARGS__)) (##__VA_ARGS__)
+#define LEETCODE_IMPL_CONCAT(a, b) a ## b
+#define LEETCODE_IMPL_CONCAT2(a, b) LEETCODE_IMPL_CONCAT(a, b)
+#define LEETCODE_PRINT_VARS(...) LEETCODE_IMPL_CONCAT2(LEETCODE_PRINT_VARS_, LEETCODE_IMPL_COUNT_ARGS(__VA_ARGS__)) (##__VA_ARGS__)
 
 
 /**

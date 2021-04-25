@@ -21,17 +21,32 @@ TEST(StringTest, TestDefaultSplit) {
 
     string s3 = " a ";
     vector<string> v3 = {"a"};
-
     EXPECT_EQ(split(s3), v3);
 
-    string s4;
-    vector<string> v4 = {};
-
-    EXPECT_EQ(split(s4), v4);
+    EXPECT_EQ(split(""), vector<string> {});
 }
 
 TEST(StringTest, TestSplitDelim) {
-    string s1 = "/home/";
+    string s1 = "/home/Bob/workspace";
+    vector<string> v1 = {"", "home", "Bob", "workspace"};
 
-    // TODO
+    EXPECT_EQ(split(s1, '/'), v1);
+    EXPECT_EQ(split(s1, "/"), v1);
+    EXPECT_THROW(split(s1, ""), invalid_argument);
+
+    EXPECT_EQ(split("abc", "abc"), vector<string> (2, ""));
+    EXPECT_EQ(split("abc", "def"), vector<string> {"abc"});
+
+    vector<string> v2 {"", "bc"};
+    EXPECT_EQ(split("abc", "a"), v2);
+
+    EXPECT_EQ(split("", "abc"), vector<string> {""});
+}
+
+TEST(StringTest, TestJoin) {
+    EXPECT_EQ(join({}, "--"), "");
+    EXPECT_EQ(join({"a"}, "--"), "a");
+    EXPECT_EQ(join({"a", "b"}, "--"), "a--b");
+    EXPECT_EQ(join({"a", "b", "c"}, "--"), "a--b--c");
+    EXPECT_EQ(join({"a", "b", "c"}, ""), "abc");
 }
