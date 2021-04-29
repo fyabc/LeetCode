@@ -209,3 +209,45 @@ TEST(Problem76Test, Basic) {
     EXPECT_EQ(Solution76::minWindow("ADOBECODEBANC", "ABC"), "BANC");
     EXPECT_EQ(Solution76::minWindow("a", "a"), "a");
 }
+
+TEST(Problem77Test, Basic) {
+    set<vector<int>> s1 {{2, 4}, {3, 4}, {2, 3}, {1, 2}, {1, 3}, {1, 4}};
+    auto r1 = Solution77::combine(4, 2);
+    EXPECT_EQ(set<vector<int>>(r1.begin(), r1.end()), s1);
+
+    vector<vector<int>> v2 {{1}};
+    EXPECT_EQ(Solution77::combine(1, 1), v2);
+}
+
+TEST(Problem78Test, Basic) {
+    set<vector<int>> s1 {{}, {1}, {2}, {1, 2}, {3}, {1, 3}, {2, 3}, {1, 2, 3}};
+    vector<int> v1 {1, 2, 3};
+    auto r1 = Solution78::subsets(v1);
+    EXPECT_EQ(set<vector<int>>(r1.begin(), r1.end()), s1);
+
+    set<vector<int>> s2 {{}, {0}};
+    vector<int> v2 {0};
+    auto r2 = Solution78::subsets(v2);
+    EXPECT_EQ(set<vector<int>>(r2.begin(), r2.end()), s2);
+}
+
+TEST(Problem79Test, Basic) {
+    vector<vector<char>> b1 {{'A', 'B', 'C', 'E'}, {'S', 'F', 'C', 'S'}, {'A', 'D', 'E', 'E'}};
+    auto b2 = b1, b3 = b1;
+
+    EXPECT_EQ(Solution79::exist(b1, "ABCCED"), true);
+    EXPECT_EQ(Solution79::exist(b2, "SEE"), true);
+    EXPECT_EQ(Solution79::exist(b3, "ABCB"), false);
+}
+
+TEST(Problem80Test, Basic) {
+    vector<int> v1 {1, 1, 1, 2, 2, 3};
+    vector<int> out1 {1, 1, 2, 2, 3};
+    EXPECT_EQ(Solution80::removeDuplicates(v1), 5);
+    EXPECT_EQ(v1, out1);
+
+    vector<int> v2 {0, 0, 1, 1, 1, 1, 2, 3, 3};
+    vector<int> out2 {0, 0, 1, 1, 2, 3, 3};
+    EXPECT_EQ(Solution80::removeDuplicates(v2), 7);
+    EXPECT_EQ(v2, out2);
+}

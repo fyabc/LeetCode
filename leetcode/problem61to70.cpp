@@ -179,7 +179,7 @@ public:
             result[i] = Int2Char[val];
         }
         auto it = result.rbegin();
-        while (*it == '0') ++it;
+        while (it != result.rend() && *it == '0') ++it;
         if (it == result.rend())
             return "0";
         return string(it, result.rend());

@@ -6,6 +6,7 @@
 
 #include <istream>
 #include <algorithm>
+#include <numeric>
 
 using namespace std;
 
@@ -189,12 +190,19 @@ public:
 
 
 class Solution76 {
+    /**
+     * Slicing in a filtered window.
+     */
 public:
     static string minWindow(const string& s, const string& t) {
-        unordered_map<char, int> counter;   // t characters counter
+        // t chars counter
+        unordered_map<char, int> counter;
         for (char ch : t) {
-            counter.emplace(ch, 0);
+            ++counter[ch];
         }
+        auto numUniqueChars = static_cast<int>(counter.size());
+
+        // Positions of t chars in s
         vector<pair<int, char>> tCharsInS;
         for (int i = 0; i < s.size(); ++i) {
             auto ch = s[i];
@@ -203,17 +211,199 @@ public:
             }
         }
 
-        leetcode::print(counter);
-        leetcode::printlnV();
-        leetcode::print(tCharsInS);
-        leetcode::printlnV();
-
         int left = 0, right = 0;
+        int minWindowSize = -1, minStartPos = 0, minEndPos = 0;
+        int numCoveredChars = 0;
+        unordered_map<char, int> windowCounter;
 
-        return s.substr(left, right - left);
+        while (right < tCharsInS.size()) {
+            auto rightCh = tCharsInS[right].second;
 
-        while (right < s.size()) {
-            // TODO
+            ++windowCounter[rightCh];
+
+            if (windowCounter[rightCh] == counter[rightCh]) {
+                ++numCoveredChars;
+            }
+
+            // If current window cover all characters, record it, then move left cursor.
+            while (left <= right && numCoveredChars == numUniqueChars) {
+                auto leftCh = tCharsInS[left].second;
+                auto startPos = tCharsInS[left].first, endPos = tCharsInS[right].first;
+
+                if (minWindowSize == -1 || endPos - startPos + 1 < minWindowSize) {
+                    minWindowSize = endPos - startPos + 1;
+                    minStartPos = startPos;
+                    minEndPos = endPos;
+                }
+
+                --windowCounter[leftCh];
+                if (windowCounter[leftCh] < counter[leftCh]) {
+                    --numCoveredChars;
+                }
+                ++left;
+            }
+
+            ++right;
         }
+
+        if (minWindowSize == -1) {
+            return "";
+        } else {
+            return s.substr(minStartPos, minEndPos - minStartPos + 1);
+        }
+    }
+};
+
+class Solution77 {
+public:
+    static vector<vector<int>> combine(int n, int k) {
+        vector<int> numbers(k);
+        iota(numbers.begin(), numbers.end(), n - k + 1);
+
+        vector<vector<int>> result;
+        auto hasNext = true;
+        while (hasNext) {
+            result.push_back(numbers);
+            hasNext = nextCombination(numbers);
+        }
+
+        return result;
+    }
+
+private:
+    static bool nextCombination(vector<int>& numbers) {
+        int i = 0;
+        while (i < numbers.size() && numbers[i] == i + 1) {
+            ++i;
+        }
+        if (i == numbers.size()) {
+            // no next
+            return false;
+        }
+        int newValue = numbers[i] - 1;
+        for (int j = i; j >= 0; --j) {
+            numbers[j] = newValue--;
+        }
+
+        return true;
+    }
+};
+
+class Solution78 {
+public:
+    static vector<vector<int>> subsets(vector<int>& nums) {
+        vector<vector<int>> result;
+
+        vector<bool> used(nums.size(), false);
+
+        auto hasNext = true;
+        while (hasNext) {
+            result.emplace_back();
+            auto& last = result.back();
+            for (int i = 0; i < nums.size(); ++i) {
+                if (used[i]) {
+                    last.push_back(nums[i]);
+                }
+            }
+            hasNext = nextSubset(used);
+        }
+
+        return result;
+    }
+
+private:
+    static bool nextSubset(vector<bool>& used) {
+        int i = 0;
+        while (i < used.size() && used[i]) {
+            ++i;
+        }
+
+        if (i == used.size()) {
+            // no next
+            return false;
+        }
+
+        used[i] = true;
+        for (int j = i - 1; j >= 0; --j) {
+            used[j] = false;
+        }
+
+        return true;
+    }
+};
+
+class Solution79 {
+public:
+    static bool exist(vector<vector<char>>& board, const string& word) {
+        auto M = static_cast<int>(board.size()), N = static_cast<int>(board[0].size());
+        vector<vector<bool>> visited(M, vector<bool>(N, false));
+
+        vector<pair<int, int>> startPositions;
+
+        char _ch = word[0];
+        for (int i = 0; i < M; ++i) {
+            const auto& row = board[i];
+            for (int j = 0; j < N; ++j) {
+                if (row[j] == _ch) {
+                    startPositions.emplace_back(i, j);
+                }
+            }
+        }
+
+        for (const auto& startPos: startPositions) {
+            if (DFS(startPos.first, startPos.second, 1, visited, board, M, N, word)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+private:
+    static bool DFS(int i, int j, int wordPos,
+                    vector<vector<bool>>& visited, vector<vector<char>>& board, int M, int N, const string& word) {
+        if (wordPos == word.size()) {
+            return true;
+        }
+
+        visited[i][j] = true;
+
+        char ch = word[wordPos];
+
+        if (i > 0 && board[i - 1][j] == ch && !visited[i - 1][j]) {
+            if (DFS(i - 1, j, wordPos + 1, visited, board, M, N, word)) {
+                return true;
+            }
+        }
+        if (j > 0 && board[i][j - 1] == ch && !visited[i][j - 1]) {
+            if (DFS(i, j - 1, wordPos + 1, visited, board, M, N, word)) {
+                return true;
+            }
+        }
+        if (i < M - 1 && board[i + 1][j] == ch && !visited[i + 1][j]) {
+            if (DFS(i + 1, j, wordPos + 1, visited, board, M, N, word)) {
+                return true;
+            }
+        }
+        if (j < N - 1 && board[i][j + 1] == ch && !visited[i][j + 1]) {
+            if (DFS(i, j + 1, wordPos + 1, visited, board, M, N, word)) {
+                return true;
+            }
+        }
+
+        visited[i][j] = false;
+
+        return false;
+    }
+};
+
+class Solution80 {
+public:
+    static int removeDuplicates(vector<int>& nums) {
+        auto beginIt = nums.begin(), endIt = nums.end();
+
+        // TODO
+
+        return 0;
     }
 };

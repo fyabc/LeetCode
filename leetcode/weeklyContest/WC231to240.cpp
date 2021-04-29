@@ -229,6 +229,98 @@ private:
     }
 };
 
+class WC232Q3_Problem1792 {
+public:
+    static double maxAverageRatio(vector<vector<int>>& classes, int extraStudents) {
+        auto cmp = [](const pair<int, int>& a, const pair<int, int>& b) {
+            return gain(a) < gain(b);
+        };
+
+        priority_queue<pair<int, int>, vector<pair<int, int>>, decltype(cmp)> queue(cmp);
+        for (const auto& cls: classes) {
+            queue.emplace(cls[0], cls[1]);
+        }
+
+        for (int i = 0; i < extraStudents; ++i) {
+            auto cls = queue.top();
+            queue.pop();
+
+            queue.emplace(cls.first + 1, cls.second + 1);
+        }
+
+        auto result = 0.0;
+        while (!queue.empty()) {
+            const auto& cls = queue.top();
+
+            result += static_cast<double>(cls.first) / static_cast<double>(cls.second);
+
+            queue.pop();
+        }
+
+        return result / static_cast<double>(classes.size());
+    }
+
+private:
+    static inline double gain(const pair<int, int>& cls) {
+        auto ad = static_cast<double>(cls.first), bd = static_cast<double>(cls.second);
+
+        return (ad + 1) / (bd + 1) - (ad / bd);
+    }
+};
+
+class WC232Q4_Problem1793 {
+public:
+    static int maximumScore(vector<int>& nums, int k) {
+        // mins[i] = minimum from i to k (or k to i)
+        vector<int> mins(nums.size());
+        mins[k] = nums[k];
+
+
+        for (int i = k - 1; i >= 0; --i) {
+            mins[i] = min(mins[i + 1], nums[i]);
+        }
+        for (int j = k + 1; j < nums.size(); ++j) {
+            mins[j] = min(mins[j - 1], nums[j]);
+        }
+
+        int i = k, j = k, currentMin = nums[k], maxScore = 0;
+
+        while (true) {
+            while (i > 0 && mins[i - 1] == currentMin) {
+                --i;
+            }
+            while (j + 1 < nums.size() && mins[j + 1] == currentMin) {
+                ++j;
+            }
+
+            maxScore = max(maxScore, (j - i + 1) * currentMin);
+
+            if (i == 0 && j + 1 == nums.size()) {
+                break;
+            }
+
+            // Try to extend left and right
+            if (i == 0) {
+                ++j;
+                currentMin = mins[j];
+            } else if (j + 1 == nums.size()) {
+                --i;
+                currentMin = mins[i];
+            } else {
+                if (mins[i - 1] > mins[j + 1]) {
+                    --i;
+                    currentMin = mins[i];
+                } else {
+                    ++j;
+                    currentMin = mins[j];
+                }
+            }
+        }
+
+        return maxScore;
+    }
+};
+
 class WC237Q1_Problem1832 {
 public:
     static bool checkIfPangram(const string& sentence) {
