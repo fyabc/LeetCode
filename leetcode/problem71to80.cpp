@@ -2,8 +2,6 @@
 // Created by fyabc on 2019/12/21.
 //
 
-#include "support/IO.h"
-
 #include <istream>
 #include <algorithm>
 #include <numeric>
@@ -400,10 +398,28 @@ private:
 class Solution80 {
 public:
     static int removeDuplicates(vector<int>& nums) {
-        auto beginIt = nums.begin(), endIt = nums.end();
+        auto beginIt = nums.begin(), endIt = nums.end(), cursor = beginIt, insertIt = beginIt;
 
-        // TODO
+        int currentValue = -100000;
+        int dupCount = 0;
+        while (cursor != endIt) {
+            if (*cursor != currentValue) {
+                // New different value
+                currentValue = *cursor;
+                dupCount = 0;
+            } else {
+                ++dupCount;
+            }
 
-        return 0;
+            if (dupCount < 2) {
+                *insertIt++ = currentValue;
+            }
+
+            ++cursor;
+        }
+
+        nums.erase(insertIt, endIt);
+
+        return static_cast<int>(nums.size());
     }
 };

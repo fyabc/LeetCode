@@ -6,8 +6,12 @@ add_executable(Google_Tests_leetcode_run_1to40
 add_executable(Google_Tests_leetcode_run_41to80
                testProblem41to60.cpp
                testProblem61to80.cpp)
+add_executable(Google_Tests_leetcode_run_81to120
+               testProblem81to100.cpp
+               testProblem101to120.cpp)
 target_link_libraries(Google_Tests_leetcode_run_1to40 gtest gtest_main)
 target_link_libraries(Google_Tests_leetcode_run_41to80 gtest gtest_main)
+target_link_libraries(Google_Tests_leetcode_run_81to120 gtest gtest_main)
 
 
 add_executable(Google_Tests_leetcode_run_weeklyContest
