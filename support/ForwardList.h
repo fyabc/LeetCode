@@ -19,6 +19,8 @@ struct ListNodeT {
 
     explicit ListNodeT(const T& x) : val(x), next(nullptr) {}
 
+    ListNodeT(const T& x, ListNodeT* next): val(x), next(next) {}
+
     template <typename ContainerType>
     static ListNodeT* fromContainer(const ContainerType& container) {
         ListNodeT* result = nullptr;
@@ -43,7 +45,7 @@ struct ListNodeT {
         os << ptr->val << std::endl;
     }
 
-    std::vector<int> toVector() const {
+    [[nodiscard]] std::vector<int> toVector() const {
         auto ptr = this;
         std::vector<int> result;
         while (ptr != nullptr) {
@@ -61,5 +63,15 @@ inline std::ostream& operator<<(std::ostream& os, ListNodeT<T>* head) {
 }
 
 using ListNode = ListNodeT<int>;
+
+/// Forward list utilities, used for leetcode (so implemented as non-member functions).
+namespace leetcode {
+
+bool fwList_Equal(const ListNode* a, const ListNode* b);
+
+ListNode* fwList_GetTail(const ListNode* head);
+void fwList_Append(int value, ListNode*& head, ListNode*& tail);
+
+}
 
 #endif //LEETCODE_FORWARDLIST_H

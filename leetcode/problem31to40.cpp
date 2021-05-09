@@ -105,7 +105,7 @@ class Solution33 {
 public:
     /**
      * Similar to binary search.
-     * Two situations: the target in an ordered range (binarySearch) or in a smaller rotated range (searchInRotated).
+     * Two situations: the target in an ordered range (binarySearch) or in a smaller rotated range (searchInRotatedDup).
      * @param nums
      * @param target
      * @return
