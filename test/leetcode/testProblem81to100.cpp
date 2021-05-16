@@ -73,3 +73,23 @@ TEST(Problem86Test, Basic) {
     vector<int> r2 {1, 2};
     EXPECT_EQ(Solution86::partition(l2, 2)->toVector(), r2);
 }
+
+TEST(Problem87Test, Basic) {
+    EXPECT_EQ(Solution87::isScramble("great", "rgeat"), true);
+    EXPECT_EQ(Solution87::isScramble("abcde", "caebd"), false);
+    EXPECT_EQ(Solution87::isScramble("a", "a"), true);
+    EXPECT_EQ(Solution87::isScramble("abc", "bca"), true);
+    EXPECT_EQ(Solution87::isScramble("abcdefghijklmnopq", "efghijklmnopqcadb"), false);
+}
+
+TEST(Problem88Test, Basic) {
+    vector<int> v1 = {1, 2, 3, 0, 0, 0}, v2 = {2, 5, 6};
+    vector<int> r1 = {1, 2, 2, 3, 5, 6};
+    Solution88::merge(v1, 3, v2, 3);
+    EXPECT_EQ(v1, r1);
+
+    vector<int> v3 = {1}, v4 = {};
+    vector<int> r2 = {1};
+    Solution88::merge(v3, 1, v4, 0);
+    EXPECT_EQ(v3, r2);
+}

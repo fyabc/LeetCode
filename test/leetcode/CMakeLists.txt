@@ -11,7 +11,7 @@ add_executable(Google_Tests_leetcode_run_81to120
                testProblem101to120.cpp)
 target_link_libraries(Google_Tests_leetcode_run_1to40 gtest gtest_main)
 target_link_libraries(Google_Tests_leetcode_run_41to80 gtest gtest_main)
-target_link_libraries(Google_Tests_leetcode_run_81to120 gtest gtest_main)
+target_link_libraries(Google_Tests_leetcode_run_81to120 gtest gtest_main Leetcode_Support_ForwardList)
 
 
 add_executable(Google_Tests_leetcode_run_weeklyContest

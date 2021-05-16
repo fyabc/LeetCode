@@ -46,4 +46,12 @@ void fwList_Append(int value, ListNode*& head, ListNode*& tail) {
     tail = tail->next;
 }
 
+void fwList_Concat(ListNode*& head1, ListNode* tail1, ListNode* head2) {
+    if (head1 == nullptr) {
+        head1 = head2;
+    } else {
+        tail1->next = head2;
+    }
+}
+
 }

@@ -228,6 +228,109 @@ public:
 class Solution86 {
 public:
     static ListNode* partition(ListNode* head, int x) {
-        return nullptr;
+        using namespace leetcode;
+
+        ListNode* head1 = nullptr, *tail1 = nullptr;
+        ListNode* head2 = nullptr, *tail2 = nullptr;
+        ListNode* current = head;
+
+        while (current != nullptr) {
+            int value = current->val;
+            if (value < x) {
+                fwList_Append(value, head1, tail1);
+            } else {
+                fwList_Append(value, head2, tail2);
+            }
+            current = current->next;
+        }
+
+        fwList_Concat(head1, tail1, head2);
+
+        return head1;
+    }
+};
+
+class Solution87 {
+    /**
+     * Recursion with Memorization.
+     *
+     * memory[i, j, len] == true: s1[i:i+len] matches s2[j:j+len].
+     */
+public:
+    struct Hasher {
+        size_t operator()(const tuple<int, int, int>& key) const {
+            return hash<int>()(get<0>(key)) ^ hash<int>()(get<1>(key)) ^ hash<int>()(get<2>(key));
+        }
+    };
+
+    static bool isScramble(const string& s1, const string& s2) {
+        unordered_map<tuple<int, int, int>, bool, Hasher> memory;
+
+        return search(0, 0, static_cast<int>(s1.size()), s1, s2, memory);
+    }
+
+private:
+    static bool search(int begin1, int begin2, int len,
+                       const string& s1, const string& s2,
+                       unordered_map<tuple<int, int, int>, bool, Hasher>& memory) {
+        if (len == 1) {
+            bool result = s1[begin1] == s2[begin2];
+            return result;
+        }
+
+        auto memoryItr = memory.find(make_tuple(begin1, begin2, len));
+        if (memoryItr != memory.end()) {
+            return memoryItr->second;
+        }
+
+        auto result = false;
+        for (int newLen = 1; newLen < len; ++newLen) {
+            // match (no swap)
+            if (search(begin1, begin2, newLen, s1, s2, memory) &&
+                search(begin1 + newLen, begin2 + newLen, len - newLen, s1, s2, memory)) {
+                result = true;
+                break;
+            }
+
+            // match (swap)
+            if (search(begin1, begin2 + len - newLen, newLen, s1, s2, memory) &&
+                search(begin1 + newLen, begin2, len - newLen, s1, s2, memory)) {
+                result = true;
+                break;
+            }
+        }
+
+        memory[make_tuple(begin1, begin2, len)] = result;
+        return result;
+    }
+};
+
+class Solution88 {
+public:
+    static void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+        int i = m - 1, j = n - 1, outPos = m + n - 1;
+        while (i >= 0 || j >= 0) {
+            if (i < 0) {
+                nums1[outPos] = nums2[j];
+                --outPos;
+                --j;
+                continue;
+            }
+            if (j < 0) {
+                nums1[outPos] = nums1[i];
+                --outPos;
+                --i;
+                continue;
+            }
+            if (nums1[i] < nums2[j]) {
+                nums1[outPos] = nums2[j];
+                --outPos;
+                --j;
+            } else {
+                nums1[outPos] = nums1[i];
+                --outPos;
+                --i;
+            }
+        }
     }
 };

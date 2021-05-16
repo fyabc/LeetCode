@@ -70,7 +70,10 @@ namespace leetcode {
 bool fwList_Equal(const ListNode* a, const ListNode* b);
 
 ListNode* fwList_GetTail(const ListNode* head);
+
 void fwList_Append(int value, ListNode*& head, ListNode*& tail);
+
+void fwList_Concat(ListNode*& head1, ListNode* tail1, ListNode* head2);
 
 }
 
