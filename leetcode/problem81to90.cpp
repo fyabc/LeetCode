@@ -334,3 +334,76 @@ public:
         }
     }
 };
+
+class Solution89 {
+    /**
+     * Gray code calculation:
+     *
+     * # Start: [0, 1]
+     * def iter(s):
+     *     exp_2_n = len(s)     # 2^n
+     *     return s + [exp_2_n + e for e in reversed(s)]
+     */
+public:
+    static vector<int> grayCode(int n) {
+        static vector<int> allResults = getAllResults();
+
+        return vector<int>(allResults.begin(), allResults.begin() + (1ULL << n));
+    }
+
+private:
+    static vector<int> getAllResults() {
+        vector<int> values(1 << 16);
+
+        values[0] = 0;
+
+        for (int n = 0; n < 16; ++n) {
+            int exp_2_n = 1 << n, exp_2_n_plus_1 = exp_2_n << 1;
+            for (int j = 0; j < exp_2_n; ++j) {
+                values[exp_2_n_plus_1 - j - 1] = values[j] + exp_2_n;
+            }
+        }
+
+        return values;
+    }
+};
+
+class Solution90 {
+    static constexpr int N = 21, OFFSET = 10;
+public:
+    static vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        vector<int> counter(N, 0);
+        for (auto num : nums) {
+            ++counter[num + OFFSET];
+        }
+
+        vector<vector<int>> result;
+        vector<int> numOfEachNums(N, 0);
+
+        DFS(0, numOfEachNums, result, counter);
+
+        return result;
+    }
+
+private:
+    static void DFS(int index, vector<int>& numOfEachNums, vector<vector<int>>& result, const vector<int>& counter) {
+        if (index == N) {
+            vector<int> newSubset;
+            for (int value = 0; value < N; ++value) {
+                auto num = numOfEachNums[value];
+                for (int j = 0; j < num; ++j) {
+                    newSubset.push_back(value - OFFSET);
+                }
+            }
+            result.push_back(std::move(newSubset));
+            return;
+        }
+
+        auto totalCount = counter[index];
+        for (int num = 0; num <= totalCount; ++num) {
+            numOfEachNums[index] = num;
+            DFS(index + 1, numOfEachNums, result, counter);
+            numOfEachNums[index] = 0;
+        }
+    }
+};

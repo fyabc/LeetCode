@@ -93,3 +93,42 @@ TEST(Problem88Test, Basic) {
     Solution88::merge(v3, 1, v4, 0);
     EXPECT_EQ(v3, r2);
 }
+
+TEST(Problem89Test, Basic) {
+    vector<int> v1 = {0, 1, 3, 2};
+    EXPECT_EQ(Solution89::grayCode(2), v1);
+
+    vector<int> v2 = {0, 1};
+    EXPECT_EQ(Solution89::grayCode(1), v2);
+}
+
+TEST(Problem90Test, Basic) {
+    vector<int> v1 = {1, 2, 2};
+    set<vector<int>> s1 = {{}, {1}, {1, 2}, {1, 2, 2}, {2}, {2, 2}};
+    auto r1 = Solution90::subsetsWithDup(v1);
+    set<vector<int>> rs1(r1.begin(), r1.end());
+    EXPECT_EQ(s1, rs1);
+
+    vector<int> v2 = {0};
+    set<vector<int>> s2 = {{}, {0}};
+    auto r2 = Solution90::subsetsWithDup(v2);
+    set<vector<int>> rs2(r2.begin(), r2.end());
+    EXPECT_EQ(s2, rs2);
+}
+
+TEST(Problem91Test, Basic) {
+    EXPECT_EQ(Solution91::numDecodings("12"), 2);
+    EXPECT_EQ(Solution91::numDecodings("226"), 3);
+    EXPECT_EQ(Solution91::numDecodings("0"), 0);
+    EXPECT_EQ(Solution91::numDecodings("06"), 0);
+}
+
+TEST(Problem92Test, Basic) {
+    auto l1 = ListNode::fromInitList({1, 2, 3, 4, 5});
+    vector<int> v1 {1, 4, 3, 2, 5};
+    EXPECT_EQ(Solution92::reverseBetween(l1, 2, 4)->toVector(), v1);
+
+    auto l2 = ListNode::fromInitList({5});
+    vector<int> v2 {5};
+    EXPECT_EQ(Solution92::reverseBetween(l2, 1, 1)->toVector(), v2);
+}
