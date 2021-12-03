@@ -1,5 +1,5 @@
 //
-// Created by v-yaf on 12/17/2019.
+// Created by v-yaf on 2019/12/17.
 //
 
 #ifndef LEETCODE_FORWARDLIST_H

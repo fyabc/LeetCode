@@ -132,3 +132,56 @@ TEST(Problem92Test, Basic) {
     vector<int> v2 {5};
     EXPECT_EQ(Solution92::reverseBetween(l2, 1, 1)->toVector(), v2);
 }
+
+TEST(Problem93Test, Basic) {
+    set<string> s1 = {"255.255.11.135", "255.255.111.35"};
+    auto r1 = Solution93::restoreIpAddresses("25525511135");
+    set<string> rs1(r1.begin(), r1.end());
+    EXPECT_EQ(s1, rs1);
+
+    set<string> s2 = {"0.0.0.0"};
+    auto r2 = Solution93::restoreIpAddresses("0000");
+    set<string> rs2(r2.begin(), r2.end());
+    EXPECT_EQ(s2, rs2);
+
+    set<string> s3 = {"1.1.1.1"};
+    auto r3 = Solution93::restoreIpAddresses("1111");
+    set<string> rs3(r3.begin(), r3.end());
+    EXPECT_EQ(s3, rs3);
+
+    set<string> s4 = {"0.10.0.10", "0.100.1.0"};
+    auto r4 = Solution93::restoreIpAddresses("010010");
+    set<string> rs4(r4.begin(), r4.end());
+    EXPECT_EQ(s4, rs4);
+
+    set<string> s5 = {"1.0.10.23", "1.0.102.3", "10.1.0.23", "10.10.2.3", "101.0.2.3"};
+    auto r5 = Solution93::restoreIpAddresses("101023");
+    set<string> rs5(r5.begin(), r5.end());
+    EXPECT_EQ(s5, rs5);
+}
+
+TEST(Problem94Test, Basic) {
+    auto t1 = new TreeNode {1,
+        nullptr,
+        new TreeNode{2,
+            new TreeNode {3},
+            nullptr,
+        }};
+    vector<int> r1 {1, 3, 2};
+    EXPECT_EQ(Solution94::inorderTraversal(t1), r1);
+
+    vector<int> r2;
+    EXPECT_EQ(Solution94::inorderTraversal(nullptr), r2);
+
+    auto t3 = new TreeNode {1};
+    vector<int> r3 {1};
+    EXPECT_EQ(Solution94::inorderTraversal(t3), r3);
+
+    auto t4 = new TreeNode {1,new TreeNode {2},nullptr};
+    vector<int> r4 {2, 1};
+    EXPECT_EQ(Solution94::inorderTraversal(t4), r4);
+
+    auto t5 = new TreeNode {1, nullptr, new TreeNode {2}};
+    vector<int> r5 {1, 2};
+    EXPECT_EQ(Solution94::inorderTraversal(t5), r5);
+}
