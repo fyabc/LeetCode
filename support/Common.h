@@ -12,6 +12,7 @@
 #endif
 
 #include <string>
+#include <list>
 #include <type_traits>
 #include <utility>
 
@@ -26,9 +27,12 @@ namespace leetcode {
 template <typename T>
 inline std::string getTypename() {
 #ifdef __GNUC__
-    std::unique_ptr<char, decltype(std::free)> gnuTypename {
-        abi::__cxa_demangle(typeid(T).name(), nullptr, nullptr, nullptr), std::free};
-    return *gnuTypename;
+    auto rawName = typeid(T).name();
+    int status = -4;
+    using freeType = decltype(std::free);
+    std::unique_ptr<char, freeType*> gnuTypename {
+        abi::__cxa_demangle(rawName, nullptr, nullptr, &status), std::free};
+    return (status == 0) ? gnuTypename.get() : rawName;
 #else
     return typeid(T).name();
 #endif

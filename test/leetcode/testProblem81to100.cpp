@@ -185,3 +185,7 @@ TEST(Problem94Test, Basic) {
     vector<int> r5 {1, 2};
     EXPECT_EQ(Solution94::inorderTraversal(t5), r5);
 }
+
+TEST(Problem95Test, Basic) {
+    // TODO
+}
