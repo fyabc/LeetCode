@@ -231,3 +231,86 @@ public:
         return result;
     }
 };
+
+class Solution95 {
+public:
+    static vector<TreeNode*> generateTrees(int n) {
+        auto& cachedTrees = getCachedTrees();
+        if (n < cachedTrees.size()) {
+            return cachedTrees[n];
+        }
+        for (int i = static_cast<int>(cachedTrees.size()); i <= n; ++i) {
+            cachedTrees.emplace_back();
+            buildTrees(i, cachedTrees.back());
+        }
+        return cachedTrees[n];
+    }
+
+private:
+    static vector<vector<TreeNode*>>& getCachedTrees() {
+        static vector<vector<TreeNode*>> cachedTrees;
+        return cachedTrees;
+    }
+
+    static void buildTrees(int n, vector<TreeNode*>& trees) {
+        if (n == 0) {
+            trees.push_back(nullptr);
+            return;
+        }
+
+        auto& cachedTrees = getCachedTrees();
+        for (int leftSize = 0; leftSize < n; ++leftSize) {
+            auto rightSize = n - 1 - leftSize;
+            for (auto leftTree: cachedTrees[leftSize]) {
+                for (auto rightTree: cachedTrees[rightSize]) {
+                    auto* newTree = new TreeNode {0};
+                    newTree->left = copyTree(leftTree);
+                    newTree->right = copyTree(rightTree);
+                    assignValues(newTree);
+                    trees.push_back(newTree);
+                }
+            }
+        }
+    }
+
+    static TreeNode* copyTree(TreeNode* tree) {
+        if (tree == nullptr) {
+            return nullptr;
+        }
+        return new TreeNode {tree->val, copyTree(tree->left), copyTree(tree->right)};
+    }
+
+    static int assignValues(TreeNode* tree, int i = 1) {
+        if (tree == nullptr) {
+            return i;
+        }
+        auto leftCount = assignValues(tree->left, i);
+        tree->val = leftCount;
+        ++leftCount;
+        return assignValues(tree->right, leftCount);
+    }
+};
+
+class Solution96 {
+public:
+    static int numTrees(int n) {
+        auto& cached = getCached();
+        if (n < cached.size()) {
+            return cached[n];
+        }
+        for (int i = static_cast<int>(cached.size()); i <= n; ++i) {
+            int count = 0;
+            for (int j = 0; j < i; ++j) {
+                count += cached[j] * cached[i - 1 - j];
+            }
+            cached.push_back(count);
+        }
+        return cached[n];
+    }
+
+private:
+    static vector<int>& getCached() {
+        static vector<int> cached {1};
+        return cached;
+    }
+};

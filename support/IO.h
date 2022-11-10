@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 #include <unordered_set>
+#include <optional>
 
 namespace leetcode {
 
@@ -175,6 +176,21 @@ inline void print(const std::initializer_list<T>& container, std::ostream& os = 
  */
 inline void print(std::nullptr_t, std::ostream& os) {
     os << "nullptr";
+}
+
+/**
+ * Special case for std::optional.
+ * @tparam T
+ * @param value
+ * @param os
+ */
+template <typename T>
+inline void print(const std::optional<T>& value, std::ostream& os = std::cout) {
+    if (value.has_value()) {
+        os << value.value();
+    } else {
+        os << "null";
+    }
 }
 
 #define LEETCODE_IMPL_IO_PRINT_SINGLE_CONTAINER(ContainerType, SEP, LP, RP)              \

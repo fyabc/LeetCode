@@ -187,5 +187,32 @@ TEST(Problem94Test, Basic) {
 }
 
 TEST(Problem95Test, Basic) {
-    // TODO
+    auto transformFunc = [](TreeNode* tree) {
+        return tree->toVector(-1);
+    };
+
+    set<vector<int>> trees1 {{1}};
+    auto r1 = Solution95::generateTrees(1);
+    set<vector<int>> rs1;
+    transform(r1.begin(), r1.end(), inserter(rs1, rs1.begin()),
+              transformFunc);
+    EXPECT_EQ(trees1, rs1);
+
+    set<vector<int>> trees2 {
+        {1, -1, 2, -1, 3},
+        {1, -1, 3, 2},
+        {2, 1, 3},
+        {3, 1, -1, -1, 2},
+        {3, 2, -1, 1},
+    };
+    auto r2 = Solution95::generateTrees(3);
+    set<vector<int>> rs2;
+    transform(r2.begin(), r2.end(), inserter(rs2, rs2.begin()),
+              transformFunc);
+    EXPECT_EQ(trees2, rs2);
+}
+
+TEST(Problem96Test, Basic) {
+    EXPECT_EQ(Solution96::numTrees(3), 5);
+    EXPECT_EQ(Solution96::numTrees(1), 1);
 }
